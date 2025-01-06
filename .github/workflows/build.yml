@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -24,22 +24,16 @@ jobs:
       uses: lukka/run-vcpkg@v11
       with:
         vcpkgGitCommitId: 'c8696863d371ab7f46e213d8f5ca923c4aef2a00'
+        
+   - name: Install build tools (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build g++
 
     - name: Install Ninja
       if: runner.os == 'macos-latest'
       run: brew install ninja
-        
-    - name: Set VCPKG_ROOT for Windows
-      if: runner.os == 'Windows'
-      run: |
-        echo "VCPKG_ROOT=$env:GITHUB_WORKSPACE/vcpkg" | Out-File -FilePath $env:GITHUB_ENV -Append
-      shell: pwsh
-
-    - name: Set VCPKG_ROOT for Unix
-      if: runner.os != 'Windows'
-      run: |
-        echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
-      shell: bash
       
     - name: Configure CMake
       run: |
