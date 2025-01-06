@@ -24,16 +24,20 @@ jobs:
       uses: lukka/run-vcpkg@v11
       with:
         vcpkgGitCommitId: 'c8696863d371ab7f46e213d8f5ca923c4aef2a00'
-        
-   - name: Install build tools (Ubuntu)
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y ninja-build g++
 
-    - name: Install Ninja
-      if: runner.os == 'macos-latest'
+    - name: Install Ninja for linux
+      if: runner.os == 'Linux'
+      run: sudo apt-get install -y ninja-build g++
+    
+    - name: Install Ninja for macOS
+      if: runner.os == 'macOS'
       run: brew install ninja
+
+    - name: Set VCPKG_ROOT for Unix
+      if: runner.os != 'Windows'
+      run: |
+        echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
+      shell: bash
       
     - name: Configure CMake
       run: |
