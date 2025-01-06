@@ -1,0 +1,8 @@
+{
+    "dependencies": [
+      "crow",
+      "cpp-httplib",
+      "openssl"
+    ]
+  }
+  
