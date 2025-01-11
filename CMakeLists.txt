@@ -18,6 +18,7 @@ add_executable(
     volum-backend
     program.cpp
     src/utils/config.cpp
+    src/utils/http.cpp
     src/services/auth.cpp
     src/services/database.cpp
     src/services/proxmox.cpp
@@ -38,6 +39,7 @@ target_link_options(
 # Libs
 find_package(OpenSSL 3.0 REQUIRED)
 find_package(httplib REQUIRED)
+find_package(unofficial-mariadb-connector-cpp CONFIG REQUIRED)
 
 # Static link
 set(Boost_USE_STATIC_LIBS ON)
@@ -49,4 +51,5 @@ target_link_libraries(
     httplib::httplib
     OpenSSL::SSL
     OpenSSL::Crypto
+    unofficial::mariadb-connector-cpp::mariadbcpp
 )
