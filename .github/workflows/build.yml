@@ -23,7 +23,7 @@ jobs:
     - name: Install vcpkg
       uses: lukka/run-vcpkg@v11
       with:
-        vcpkgGitCommitId: 'c8696863d371ab7f46e213d8f5ca923c4aef2a00'
+        vcpkgGitCommitId: '66248ff4dbafdff577df74e4d9a8e948389fab09'
 
     - name: Install Ninja for linux
       if: runner.os == 'Linux'
@@ -38,9 +38,6 @@ jobs:
       run: |
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
       shell: bash
-
-    - name: Install VCPKG packages
-      run: vcpkg install
       
     - name: Configure CMake
       run: |
