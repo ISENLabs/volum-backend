@@ -13,6 +13,7 @@ Env_Struct& Env_Struct::getInstance(){
         // First initialization: parse the config. 
         try{
             instance.init_parseConfig();
+            instance.initialized = true;
         }
         catch(std::exception& ex){
             Debug::Log("Unable to parse config: " + std::string(ex.what()), "ES-GETINST");
