@@ -2,6 +2,7 @@
 #include "src/utils/debug.hpp"
 #include "src/utils/config.hpp"
 #include "src/services/database.hpp"
+#include "src/utils/http.hpp"
 
 using Utils::Debug;
 using Utils::Config::Env_Struct;
@@ -24,6 +25,11 @@ int main(){
     while(res->next()){
         Debug::Log("Status: " + std::string(res->getString("status")) + " and Version: " + std::string(res->getString("version")), "MAIN");
     }
+
+    // // test http
+    // Utils::Http::Client client("https://api.sampleapis.com");
+    // auto resp = client.get("/coffee/hot");
+    // Debug::Log("Status: " + std::to_string(resp.status) + " " + resp.body, "MAIN");
 
     return 0;
 }
