@@ -1,7 +1,9 @@
 {
-    "dependencies": [
-      "crow",
-      "cpp-httplib",
-      "openssl"
-    ]
+  "dependencies": [
+    "cpp-httplib",
+    "crow",
+    "mariadb-connector-cpp",
+    "openssl",
+    "rapidjson"
+  ]
 }

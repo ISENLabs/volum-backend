@@ -2,6 +2,7 @@ build/
 dist/
 .vscode/
 .vcpkg_installed/
+vcpkg_installed/
 .console
 env.json
 

@@ -17,6 +17,10 @@ include_directories(exts)
 add_executable(
     volum-backend
     program.cpp
+    src/utils/config.cpp
+    src/services/auth.cpp
+    src/services/database.cpp
+    src/services/proxmox.cpp
 )
 
 target_compile_options(
