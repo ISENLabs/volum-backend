@@ -38,6 +38,9 @@ jobs:
       run: |
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
       shell: bash
+
+    - name: Install VCPKG packages
+      run: vcpkg install
       
     - name: Configure CMake
       run: |
