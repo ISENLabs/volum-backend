@@ -1,6 +1,4 @@
-#pragma once
 #include "../services/auth.hpp"
-
 
 using Services::Auth::IAuthentication;
 using Services::Auth::User;

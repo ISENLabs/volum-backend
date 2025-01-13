@@ -1,5 +1,4 @@
 #include "lazy_auth.hpp"
-#include "../services/auth.hpp"
 #include "../utils/config.hpp"
 #include "../utils/debug.hpp"
 #include "../utils/http.hpp"
