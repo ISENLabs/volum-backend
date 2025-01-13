@@ -124,6 +124,16 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
     }
     else
         throw std::runtime_error("Missing db_options in config");
+
+    if(doc.HasMember("auth")){
+        const rapidjson::Value& auth = doc["auth"];
+        if(auth.HasMember("lazy_api") && auth["lazy_api"].IsString())
+            auth_lazyApi = auth["lazy_api"].GetString();
+        else
+            throw std::runtime_error("Missing auth.lazy_api in config");
+    }
+    else
+        throw std::runtime_error("Missing auth in config");
 }
 
 void Env_Struct::init_parseConfig(){

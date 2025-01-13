@@ -21,5 +21,8 @@
         "user": "my_user",
         "password": "my_password",
         "database": "my_database"
+    },
+    "auth":{
+        "lazy_api": "https://lazy-api.mysite.fr"
     }
 }

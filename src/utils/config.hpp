@@ -29,6 +29,8 @@ public:
     std::string db_password;
     std::string db_name;
 
+    std::string auth_lazyApi;
+
 
     /**
      * Class-Specific elements
