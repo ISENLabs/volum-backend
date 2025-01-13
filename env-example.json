@@ -23,6 +23,7 @@
         "database": "my_database"
     },
     "auth":{
-        "lazy_api": "https://lazy-api.mysite.fr"
+        "lazy_hostname": "https://lazy-api.mysite.fr",
+        "lazy_route": "/api/user"
     }
 }

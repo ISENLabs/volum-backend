@@ -127,10 +127,15 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
 
     if(doc.HasMember("auth")){
         const rapidjson::Value& auth = doc["auth"];
-        if(auth.HasMember("lazy_api") && auth["lazy_api"].IsString())
-            auth_lazyApi = auth["lazy_api"].GetString();
+        if(auth.HasMember("lazy_hostname") && auth["lazy_hostname"].IsString())
+            auth_lazyHostname = auth["lazy_hostname"].GetString(); // Let's assume the user entered a well-formated hostname
         else
-            throw std::runtime_error("Missing auth.lazy_api in config");
+            throw std::runtime_error("Missing auth.lazy_hostname in config");
+
+        if(auth.HasMember("lazy_route") && auth["lazy_route"].IsString())
+            auth_lazyHostname = auth["lazy_route"].GetString(); // Let's assume the user entered a well-formated route
+        else
+            throw std::runtime_error("Missing auth.lazy_route in config");
     }
     else
         throw std::runtime_error("Missing auth in config");

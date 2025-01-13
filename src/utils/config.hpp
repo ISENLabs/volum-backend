@@ -29,7 +29,8 @@ public:
     std::string db_password;
     std::string db_name;
 
-    std::string auth_lazyApi;
+    std::string auth_lazyHostname;
+    std::string auth_lazyRoute;
 
 
     /**
