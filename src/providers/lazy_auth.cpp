@@ -85,8 +85,16 @@ User LazyAuth::checkAuth(std::string token){
     if(info.HasMember("class_name") && info["class_name"].IsString()){
         std::string classname(info["class_name"].GetString());
 
-        if(classname.substr(classname.length(), -4) != "Caen"){
-            Debug::Log("Error: class isnt caen: '" + classname.substr(classname.length(), -4) + "'", "LA-CA");
+        // look for the last " "
+        // CIR 3 CAEN
+        int last_space = 0;
+        int _len = classname.length();
+        for(int i = 0; i < _len; i++)
+            if(classname[i] == ' ')
+                last_space = i;
+
+        if(classname.substr(_len - (_len - 1  - last_space)) != "Caen"){
+            Debug::Log("Error: class isnt caen: '" + classname + "' -> '" + classname.substr(_len - (_len - 1 - last_space)) + "'", "LA-CA");
             throw std::runtime_error("Error: Volum is only available for Caen campus right now.");
         }
     }
