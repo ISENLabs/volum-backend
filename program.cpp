@@ -2,6 +2,8 @@
 #include "src/utils/debug.hpp"
 #include "src/utils/config.hpp"
 #include "src/services/database.hpp"
+#include "src/services/auth.hpp"
+#include "src/providers/lazy_auth.hpp"
 #include "src/utils/http.hpp"
 
 using Utils::Debug;
@@ -25,6 +27,11 @@ int main(){
     while(res->next()){
         Debug::Log("Status: " + std::string(res->getString("status")) + " and Version: " + std::string(res->getString("version")), "MAIN");
     }
+
+    // Change your auth provider here, if needed !
+    Providers::Auth::Lazy::LazyAuth auth_provider;
+    std::shared_ptr<Providers::Auth::Lazy::LazyAuth> provider = std::make_shared<Providers::Auth::Lazy::LazyAuth>(auth_provider);
+    env.set_auth_handler(provider);
 
     // // test http
     // Utils::Http::Client client("https://api.sampleapis.com");

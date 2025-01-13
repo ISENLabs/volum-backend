@@ -1,6 +1,6 @@
 # Services
 ## Auth
-Functions that will be used to authenticate the user, and check permissions.
+Interface representing an authentication class, so you can implement yours (open-source mind ^^)
 
 ## Proxmox
 Functions that will interact with Proxmox API.
