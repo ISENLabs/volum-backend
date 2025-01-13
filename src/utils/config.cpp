@@ -9,11 +9,11 @@ using Utils::Debug;
 Env_Struct& Env_Struct::getInstance(){
     static Env_Struct instance;
 
-    if(!instance.initialized){
+    if(!instance._initialized){
         // First initialization: parse the config. 
         try{
             instance.init_parseConfig();
-            instance.initialized = true;
+            instance._initialized = true;
         }
         catch(std::exception& ex){
             Debug::Log("Unable to parse config: " + std::string(ex.what()), "ES-GETINST");
@@ -165,4 +165,16 @@ void Env_Struct::init_parseConfig(){
 
     // Call the checkConfig method
     init_checkConfig(doc);
+}
+
+void Env_Struct::set_auth_handler(std::shared_ptr<Services::Auth::IAuthentication> auth_provider){
+    _auth_provider = auth_provider;
+    _provider_set = true;
+}
+
+std::shared_ptr<Services::Auth::IAuthentication> Env_Struct::get_auth_provider(){
+    if(!_provider_set)
+        throw std::runtime_error("You should set_auth_handler() before getting the auth handler.");
+
+    return _auth_provider;
 }

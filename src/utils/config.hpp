@@ -1,5 +1,7 @@
+#pragma once
 #include <iostream>
 #include <rapidjson/document.h>
+#include "../services/auth.hpp"
 
 namespace Utils::Config {
 
@@ -32,24 +34,24 @@ public:
     std::string auth_lazyHostname;
     std::string auth_lazyRoute;
 
-
-    /**
-     * Class-Specific elements
-     */
-    bool initialized = false;
-    
     /** 
      * Method
      */
     bool parseConfig();
     static Env_Struct& getInstance();
+    void set_auth_handler(std::shared_ptr<Services::Auth::IAuthentication> auth_provider);
+    std::shared_ptr<Services::Auth::IAuthentication> get_auth_provider();
 
 private:
+    bool _initialized = false;
+    bool _provider_set = false; // Could be avoided by checking directly if _auth_provider is nullptr, but 
+    std::shared_ptr<Services::Auth::IAuthentication> _auth_provider;
+
     void init_parseConfig();
     void init_checkConfig(rapidjson::Document& doc);
     
     // Singleton
-    Env_Struct() {};
+    Env_Struct() : _auth_provider(nullptr) {};
     Env_Struct(Env_Struct const*);
     void operator=(Env_Struct const&);
 
