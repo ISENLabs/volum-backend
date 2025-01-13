@@ -11,6 +11,8 @@ private:
     std::string makeLazyRequest(std::string token);
 
 public:
+    LazyAuth(){};
+    ~LazyAuth(){};
     User checkAuth(std::string token) override;
 };
 

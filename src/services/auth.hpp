@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string>
 
@@ -13,8 +14,8 @@ struct User {
 class IAuthentication{
 
 public:
-    IAuthentication();
-    ~IAuthentication();
+    IAuthentication(){};
+    ~IAuthentication(){};
 
     virtual User checkAuth(std::string token) = 0;
 };
