@@ -9,6 +9,15 @@ struct User {
     std::string lastname;
     std::string email;
     uint userId;
+
+    std::string inline to_json(){
+        return "{"
+            "\"firstname\":\"" + firstname + "\","
+            "\"lastname\":\"" + lastname + "\","
+            "\"email\":\"" + email + "\"," 
+            "\"id\":" + std::to_string(userId) +
+        "}";
+    }
 };
 
 class IAuthentication{
