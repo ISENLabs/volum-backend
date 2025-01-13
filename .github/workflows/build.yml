@@ -1,11 +1,12 @@
 name: Build and Test
 
 on:
-  branches:
-    - '**'
+  push:
+    branches: 
+      - '**'
   pull_request:
-    branches:
-    - '**'
+    branches: 
+      - '**'
 
 env:
   BUILD_TYPE: Debug
