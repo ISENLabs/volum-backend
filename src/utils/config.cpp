@@ -136,9 +136,24 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             auth_lazyRoute = auth["lazy_route"].GetString(); // Let's assume the user entered a well-formated route
         else
             throw std::runtime_error("Missing auth.lazy_route in config");
+
+        if(auth.HasMember("cookie_name") && auth["cookie_name"].IsString())
+            auth_cookieName = auth["cookie_name"].GetString(); // Let's assume the user entered a well-formated route
+        else
+            throw std::runtime_error("Missing auth.cookie_name in config");
     }
     else
         throw std::runtime_error("Missing auth in config");
+
+    if(doc.HasMember("webserver")){
+        const rapidjson::Value& ws = doc["webserver"];
+        if(ws.HasMember("port") && ws["port"].IsUint())
+            webserver_port = ws["port"].GetUint();
+        else
+            throw std::runtime_error("Missing webserver.port in config");
+    }
+    else
+        throw std::runtime_error("Missing webserver in config");
 }
 
 void Env_Struct::init_parseConfig(){
