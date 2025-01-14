@@ -9,6 +9,7 @@ struct User {
     std::string lastname;
     std::string email;
     uint userId;
+    bool is_admin = false;
 
     std::string inline to_json(){
         return "{"
