@@ -18,6 +18,7 @@ public:
     ~Client();
     void set_header(const char* key, const char* value);
     void set_timeout(uint timeout);
+    void set_cert_validation(bool validate);
 
     Response get(const char* path);
     Response post(const char* path, const char* body);
@@ -30,6 +31,7 @@ private:
     bool json;
     std::map<std::string, std::string> headers; // Default headers: none
     uint timeout = 5;
+    bool validate_cert;
 
 }; // Client class
 
