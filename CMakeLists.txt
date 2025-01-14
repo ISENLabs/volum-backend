@@ -22,6 +22,7 @@ add_executable(
     src/providers/lazy_auth.cpp
     src/services/database.cpp
     src/services/proxmox.cpp
+    src/services/webserver.cpp
 )
 
 target_compile_options(

@@ -3,6 +3,7 @@
 #include "src/utils/config.hpp"
 #include "src/services/database.hpp"
 #include "src/services/auth.hpp"
+#include "src/services/webserver.hpp"
 #include "src/providers/lazy_auth.hpp"
 #include "src/utils/http.hpp"
 
@@ -37,6 +38,13 @@ int main(){
     // Utils::Http::Client client("https://api.sampleapis.com");
     // auto resp = client.get("/coffee/hot");
     // Debug::Log("Status: " + std::to_string(resp.status) + " " + resp.body, "MAIN");
+
+
+    Debug::Log("Launching web server ...", "MAIN");
+    Services::WebServer ws;
+
+    ws.register_routes();
+    ws.run_server(env.webserver_port);
 
     return 0;
 }
