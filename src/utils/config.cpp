@@ -38,7 +38,7 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             throw std::runtime_error("Missing pve.token_id in config");
 
         if(pve.HasMember("token_secret") && pve["token_secret"].IsString())
-            pve_tokenId = pve["token_secret"].GetString();
+            pve_tokenSecret = pve["token_secret"].GetString();
         else
             throw std::runtime_error("Missing pve.token_secret in config");
 

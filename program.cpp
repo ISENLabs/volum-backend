@@ -7,11 +7,13 @@
 #include "src/services/webserver.hpp"
 #include "src/providers/lazy_auth.hpp"
 #include "src/utils/http.hpp"
+#include "src/proxmox/Requests.hpp"
 
 using namespace Utils::Cache;
 using Utils::Debug;
 using Utils::Config::Env_Struct;
 using Services::Database;
+using Proxmox::Requests;
 
 
 int main(){
@@ -37,17 +39,20 @@ int main(){
     std::shared_ptr<Providers::Auth::Lazy::LazyAuth> provider = std::make_shared<Providers::Auth::Lazy::LazyAuth>(auth_provider);
     env.set_auth_handler(provider);
 
+    Requests requests;
+    requests.list_lxcs();
+
     // // test http
     // Utils::Http::Client client("https://api.sampleapis.com");
     // auto resp = client.get("/coffee/hot");
     // Debug::Log("Status: " + std::to_string(resp.status) + " " + resp.body, "MAIN");
 
 
-    Debug::Log("Launching web server ...", "MAIN");
+    /*Debug::Log("Launching web server ...", "MAIN");
     Services::WebServer ws;
 
     ws.register_routes();
-    ws.run_server(env.webserver_port);
+    ws.run_server(env.webserver_port);*/
 
     return 0;
 }

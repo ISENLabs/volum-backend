@@ -11,7 +11,7 @@ using Utils::Http::Response;
 Client::Client(const char* host, bool json): json(json){
     host = host;
     client = new httplib::Client(host);
-    set_cert_validation(true); // By default
+    set_cert_validation(false); // By default
 }
 
 Client::~Client(){
