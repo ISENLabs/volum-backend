@@ -1,15 +1,18 @@
 #include <iostream>
 #include "src/utils/debug.hpp"
 #include "src/utils/config.hpp"
+#include "src/utils/cache.hpp"
 #include "src/services/database.hpp"
 #include "src/services/auth.hpp"
 #include "src/services/webserver.hpp"
 #include "src/providers/lazy_auth.hpp"
 #include "src/utils/http.hpp"
 
+using namespace Utils::Cache;
 using Utils::Debug;
 using Utils::Config::Env_Struct;
 using Services::Database;
+
 
 int main(){
     Debug::Log("Volum-Backend starting up...", "MAIN");
