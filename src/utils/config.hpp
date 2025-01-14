@@ -14,10 +14,10 @@ public:
     std::string pve_host;
     std::string pve_tokenId;
     std::string pve_tokenSecret;
+    std::string pve_node;
 
     uint vm_startIndex;
     std::string vm_osTemplate;
-    std::string vm_node;
     bool vm_onboot;
     ushort vm_cores;
     ushort vm_memory;

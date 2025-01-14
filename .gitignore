@@ -5,6 +5,7 @@ dist/
 vcpkg_installed/
 .console
 env.json
+test*.sh
 
 # Prerequisites
 *.d

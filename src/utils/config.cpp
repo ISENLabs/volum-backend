@@ -41,6 +41,12 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             pve_tokenId = pve["token_secret"].GetString();
         else
             throw std::runtime_error("Missing pve.token_secret in config");
+
+        if(pve.HasMember("node") && pve["node"].IsString())
+            pve_node = pve["node"].GetString();
+        else
+            throw std::runtime_error("Missing pve.node in config");
+
     }
     else
         throw std::runtime_error("Missing pve in config");
@@ -56,11 +62,6 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             vm_osTemplate = vms["os_template"].GetString();
         else
             throw std::runtime_error("Missing vms_options.os_template in config");
-
-        if(vms.HasMember("node") && vms["node"].IsString())
-            vm_node = vms["node"].GetString();
-        else
-            throw std::runtime_error("Missing vms_options.node in config");
 
         if(vms.HasMember("onboot") && vms["onboot"].IsBool())
             vm_onboot = vms["onboot"].GetBool();
