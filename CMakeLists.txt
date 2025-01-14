@@ -19,6 +19,7 @@ add_executable(
     program.cpp
     src/utils/config.cpp
     src/utils/http.cpp
+    src/utils/cache.cpp
     src/providers/lazy_auth.cpp
     src/services/database.cpp
     src/proxmox/methods.cpp
