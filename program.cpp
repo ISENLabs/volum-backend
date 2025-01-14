@@ -46,8 +46,6 @@ int main(){
     Debug::Log("Launching web server ...", "MAIN");
     Services::WebServer ws;
 
-    CacheHandler<int, std::string> _ch(10);
-
     ws.register_routes();
     ws.run_server(env.webserver_port);
 

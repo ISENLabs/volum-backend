@@ -27,7 +27,7 @@ struct Cache_Object{
 template <typename K, typename T>
 class CacheHandler{
 private:
-    int _ttl;
+    uint _ttl;
     std::map<K, Cache_Object<T>> _elements; // K: key, T: type of the stored object
 
 public:
@@ -37,10 +37,11 @@ public:
 
     // Returns the value if not expired. If expired, returns null + deletes the element.
     std::optional<T> get_element(K key){
-        if(_elements.find(key) != _elements.end()){
-            if(_elements[key].max_life >= timestamp()){
-                _elements[key].max_life = timestamp()+_ttl;
-                return std::optional<T>(*(_elements[key].object));
+        auto it = _elements.find(key);
+        if(it != _elements.end()){
+            if(it->second.max_life >= timestamp()){
+                it->second.max_life = timestamp()+_ttl;
+                return *(it->second.object);
             }
             // too old ? 
             else{
@@ -56,8 +57,9 @@ public:
     // Update the TTL for the element
     void ping(K key){
         // Check if K exists
-        if(_elements.find(key) != _elements.end()){
-            _elements[key].max_life = timestamp() + _ttl;
+        auto it = _elements.find(key);
+        if(it != _elements.end()){
+            it->second.max_life = timestamp() + _ttl;
         }
     }
     
@@ -72,8 +74,9 @@ public:
         cobject.object = std::make_shared<T>(object);
         cobject.max_life = timestamp() + _ttl;
 
-        if(_elements.find(key) != _elements.end()){
-            _elements[key] = cobject;
+        auto it = _elements.find(key);
+        if(it != _elements.end()){
+            it->second = cobject;
         }
         else
             _elements.insert({key, cobject});
