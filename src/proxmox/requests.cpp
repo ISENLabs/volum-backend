@@ -98,7 +98,8 @@ rapidjson::Document Requests::stop_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/stop";
-    Response resp = client->get(path.c_str());
+    std::string body = "node="+config.pve_node+"&vmid="+std::to_string(pct_id);
+    Response resp = client->post(path.c_str(), body.c_str());
 
     return response_to_document(resp);
 }
@@ -107,7 +108,8 @@ rapidjson::Document Requests::start_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/start";
-    Response resp = client->get(path.c_str());
+    std::string body = "node="+config.pve_node+"&vmid="+std::to_string(pct_id);
+    Response resp = client->post(path.c_str(), body.c_str());
 
     return response_to_document(resp);
 }
