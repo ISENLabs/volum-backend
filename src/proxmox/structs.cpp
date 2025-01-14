@@ -44,7 +44,7 @@ Proxmox_LXC json_to_lxc(rapidjson::Value& json){
         Proxmox_LXC lxc;
         // Check if the keys exist
         if(json.HasMember("status") && json["status"].IsString())
-            lxc.status = json["status"].GetString() == "running" ? Proxmox_LXC_State::RUNNING : Proxmox_LXC_State::STOPPED;
+            lxc.status = std::string(json["status"].GetString()) == "running" ? Proxmox_LXC_State::RUNNING : Proxmox_LXC_State::STOPPED;
         else
             throw std::runtime_error("Unable to get status value");
 
