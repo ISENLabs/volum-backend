@@ -28,8 +28,6 @@ void WebServer::register_routes(){
             auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
             return User_Routes::infos(ctx);
         });
-    
-
 
 }
 
