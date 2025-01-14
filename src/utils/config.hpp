@@ -12,7 +12,8 @@ public:
      *   Env elements
      */
     std::string pve_host;
-    std::string pve_token;
+    std::string pve_tokenId;
+    std::string pve_tokenSecret;
 
     uint vm_startIndex;
     std::string vm_osTemplate;
