@@ -1,15 +1,12 @@
 #include "requests.hpp"
-#include <vector>
 #include <iostream>
 
 #include "../utils/config.hpp"
 #include "../utils/debug.hpp"
-#include "structs.hpp"
 
 using namespace Proxmox;
 using namespace Utils::Config;
 using Utils::Debug;
-using namespace Proxmox::Structs;
 
 Requests::Requests() {
     auto& config = Env_Struct::getInstance();
@@ -18,8 +15,8 @@ Requests::Requests() {
     std::string token = "PVEAPIToken="+config.pve_tokenId+"="+config.pve_tokenSecret;
     client->set_header("Authorization", token.c_str());
 
-    Debug::addIgnore("PVE-REQUEST-ERROR");
-    Debug::addIgnore("PVE-REQUEST");
+    //Debug::addIgnore("PVE-REQUEST-ERROR");
+    //Debug::addIgnore("PVE-REQUEST");
 }
 
 Requests::~Requests() {
@@ -41,7 +38,7 @@ rapidjson::Document Requests::response_to_document(Response resp) {
     }
 
     Debug::Log(resp.body.c_str(), "PVE-REQUEST");
-    if(doc.HasMember("data") && doc["data"].IsArray()) {
+    if(doc.HasMember("data")) {
         rapidjson::Document finalDoc;
         finalDoc.CopyFrom(doc["data"], finalDoc.GetAllocator());
 
