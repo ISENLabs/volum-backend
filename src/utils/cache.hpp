@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <optional>
+#include <ctime>
 
 namespace Utils::Cache{
 
