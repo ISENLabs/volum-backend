@@ -31,13 +31,13 @@ std::string lxc_to_json(Proxmox_LXC lxc){
 }
 
 std::string lxcs_to_json(Proxmox_LXCS lxc){
-    std::string json = "{ \"data\": [";
+    std::string json = "[";
     for(auto& _lxc : lxc){
         json += lxc_to_json(_lxc) + ",";
     }
     if(lxc.size()) // Only remove the trailing comma if one or more elt is added in the json
         json.pop_back();
-    json += "]}";
+    json += "]";
     return json;
 }
 
