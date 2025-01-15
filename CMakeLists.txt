@@ -21,7 +21,9 @@ add_executable(
     src/utils/http.cpp
     src/providers/lazy_auth.cpp
     src/services/database.cpp
-    src/services/proxmox.cpp
+    src/proxmox/methods.cpp
+    src/proxmox/requests.cpp
+    src/proxmox/structs.cpp
     src/services/webserver.cpp
 )
 

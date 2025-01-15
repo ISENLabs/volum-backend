@@ -1,12 +1,13 @@
 {
     "pve": {
         "host": "https://pve.isenlabs.fr",
-        "token": "your_token"
+        "token_id": "userid@pam!tokenname",
+        "token_secret": "the-token-secret",
+        "node":"pve-node-name"
     },
     "vms_options": {
         "start_index": 2000,
         "os_template": "template-debian-12.0-standard_12.0-1_amd64.tar.gz",
-        "node": "pve",
         "onboot": true,
         "cores": 1,
         "memory": 768,

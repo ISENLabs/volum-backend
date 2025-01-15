@@ -11,6 +11,7 @@ using Utils::Http::Response;
 Client::Client(const char* host, bool json): json(json){
     host = host;
     client = new httplib::Client(host);
+    set_cert_validation(false); // By default
 }
 
 Client::~Client(){
@@ -126,4 +127,9 @@ Response Client::del(const char* path, const char* body){
         response.error_reason = httplib::to_string(res.error());
     }
     return response;
+}
+
+void Client::set_cert_validation(bool validate){
+    validate_cert = validate;
+    client->enable_server_certificate_verification(validate);
 }

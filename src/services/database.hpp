@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <mariadb/conncpp.hpp>
 
@@ -13,7 +14,7 @@ public:
     static Database& getInstance();
 
     // Methods
-    std::unique_ptr<sql::Connection> getConnection();
+    std::unique_ptr<sql::Connection>& getConnection();
 private:
     // Singleton
     Database() {};

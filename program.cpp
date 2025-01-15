@@ -1,15 +1,20 @@
 #include <iostream>
 #include "src/utils/debug.hpp"
 #include "src/utils/config.hpp"
+#include "src/utils/cache.hpp"
 #include "src/services/database.hpp"
 #include "src/services/auth.hpp"
 #include "src/services/webserver.hpp"
 #include "src/providers/lazy_auth.hpp"
 #include "src/utils/http.hpp"
+#include "src/proxmox/requests.hpp"
 
+using namespace Utils::Cache;
 using Utils::Debug;
 using Utils::Config::Env_Struct;
 using Services::Database;
+using Proxmox::Requests;
+
 
 int main(){
     Debug::Log("Volum-Backend starting up...", "MAIN");
@@ -22,7 +27,7 @@ int main(){
     Debug::Log("Connecting to DB", "MAIN");
     auto& db = Database::getInstance();
     // Test: retrieve status
-    auto conn = db.getConnection();
+    auto& conn = db.getConnection();
     auto stmt = conn->createStatement();
     auto res = stmt->executeQuery("SELECT * FROM volum_status WHERE id = 1");
     while(res->next()){
@@ -34,11 +39,9 @@ int main(){
     std::shared_ptr<Providers::Auth::Lazy::LazyAuth> provider = std::make_shared<Providers::Auth::Lazy::LazyAuth>(auth_provider);
     env.set_auth_handler(provider);
 
-    // // test http
-    // Utils::Http::Client client("https://api.sampleapis.com");
-    // auto resp = client.get("/coffee/hot");
-    // Debug::Log("Status: " + std::to_string(resp.status) + " " + resp.body, "MAIN");
-
+    // // Test proxmox conn
+    // Requests requests;
+    // requests.list_lxcs();
 
     Debug::Log("Launching web server ...", "MAIN");
     Services::WebServer ws;

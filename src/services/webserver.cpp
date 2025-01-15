@@ -1,5 +1,7 @@
 #include "../handlers/routes/defaults.hpp"
 #include "../handlers/routes/user.hpp"
+#include "../handlers/routes/list_vms.hpp"
+#include "../handlers/routes/get_vm.hpp"
 #include "webserver.hpp"
 
 using Services::WebServer;
@@ -28,9 +30,22 @@ void WebServer::register_routes(){
             auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
             return User_Routes::infos(ctx);
         });
-    
 
+    // List VMs
+    CROW_ROUTE(app, "/vms")
+        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
+        ([&](const crow::request &req) {
+            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+            return VMS::list_vms(ctx);
+        });
 
+    // Get ONE vm details
+    CROW_ROUTE(app, "/vms/<int>")
+        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
+        ([&](const crow::request &req, uint pct_id) {
+            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+            return VMS::get_vm(ctx, pct_id);
+        });
 }
 
 void WebServer::run_server(uint port){

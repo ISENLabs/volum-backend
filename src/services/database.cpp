@@ -33,6 +33,6 @@ void Database::connect(){
     }
 }
 
-std::unique_ptr<sql::Connection> Database::getConnection(){
-    return std::move(connection);
+std::unique_ptr<sql::Connection>& Database::getConnection(){
+    return connection;
 }
