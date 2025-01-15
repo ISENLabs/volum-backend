@@ -26,6 +26,8 @@ struct Proxmox_LXC { // LinuX Containers
     size_t swap; // swap usage
     size_t net_in;
     size_t net_out;
+
+    std::string ip_address = ""; // empty by default!
 };
 typedef std::vector<Proxmox_LXC> Proxmox_LXCS;
 
