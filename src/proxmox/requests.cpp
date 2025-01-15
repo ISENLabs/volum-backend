@@ -11,12 +11,15 @@ using Utils::Debug;
 Requests::Requests() {
     auto& config = Env_Struct::getInstance();
     client = new Client(config.pve_host.c_str());
+    client->set_timeout(10);
 
     std::string token = "PVEAPIToken="+config.pve_tokenId+"="+config.pve_tokenSecret;
     client->set_header("Authorization", token.c_str());
 
-    //Debug::addIgnore("PVE-REQUEST-ERROR");
-    //Debug::addIgnore("PVE-REQUEST");
+    client->set_cert_validation(false);
+
+    // Debug::addIgnore("PVE-RQ-ERR");
+    Debug::addIgnore("PVE-RQ");
 }
 
 Requests::~Requests() {
