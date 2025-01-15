@@ -91,7 +91,7 @@ Proxmox_LXC Converters::json_to_lxc(rapidjson::Value& json){
         if(json.HasMember("cpu") && json["cpu"].IsDouble())
             lxc.cpu = json["cpu"].GetDouble();
         else
-            throw std::runtime_error("Unable to get cpu value");
+            lxc.cpu = 0;
 
         if(json.HasMember("disk") && json["disk"].IsUint64())
             lxc.disk = json["disk"].GetUint64();
@@ -114,7 +114,7 @@ Proxmox_LXC Converters::json_to_lxc(rapidjson::Value& json){
             throw std::runtime_error("Unable to get net_in value");
 
         if(json.HasMember("netout") && json["netout"].IsUint64())
-            lxc.net_out = json["net_out"].GetUint64();
+            lxc.net_out = json["netout"].GetUint64();
         else
             throw std::runtime_error("Unable to get net_out value");
 

@@ -9,7 +9,8 @@ CREATE TABLE volum_status (
 CREATE TABLE volum_vms (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `ctid` INT NOT NULL,
-    `internal_ip` VARCHAR(15) NOT NULL
+    `internal_ip` VARCHAR(15) NOT NULL,
+    `user_id` INT NOT NULL
 );
 
 CREATE TABLE volum_ssh_logs (
