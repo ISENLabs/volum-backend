@@ -5,7 +5,7 @@
 using namespace Proxmox::Structs;
 using Utils::Debug;
 
-std::string lxc_to_json(Proxmox_LXC lxc){
+std::string Converters::lxc_to_json(Proxmox_LXC lxc){
     std::string json = "{"
         "\"status\": \"" + std::string((lxc.status == Proxmox_LXC_State::RUNNING ? "running" : "stopped")) + "\","
         "\"name\": \"" + lxc.name + "\","
@@ -30,7 +30,7 @@ std::string lxc_to_json(Proxmox_LXC lxc){
     return json;
 }
 
-std::string lxcs_to_json(Proxmox_LXCS lxc){
+std::string Converters::lxcs_to_json(Proxmox_LXCS lxc){
     std::string json = "[";
     for(auto& _lxc : lxc){
         json += lxc_to_json(_lxc) + ",";
@@ -44,7 +44,7 @@ std::string lxcs_to_json(Proxmox_LXCS lxc){
 /// @brief Parse json and extract the struct. Only call it with the $.data.
 /// @param json 
 /// @return 
-Proxmox_LXC json_to_lxc(rapidjson::Value& json){
+Proxmox_LXC Converters::json_to_lxc(rapidjson::Value& json){
     try{
         Proxmox_LXC lxc;
         // Check if the keys exist
@@ -126,7 +126,7 @@ Proxmox_LXC json_to_lxc(rapidjson::Value& json){
     }
 }
 
-Proxmox_LXCS json_to_lxcs(rapidjson::Document& json){
+Proxmox_LXCS Converters::json_to_lxcs(rapidjson::Value& json){
     if(!json.HasMember("data") || !json["data"].IsArray()){
         Debug::Log("Unable to extract LXC from json.", "CV-JTLS");
         throw std::runtime_error("Unable to parse json");

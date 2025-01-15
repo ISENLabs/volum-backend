@@ -35,8 +35,8 @@ class Converters {
 public:
     static std::string lxc_to_json(Proxmox_LXC lxc);
     static std::string lxcs_to_json(Proxmox_LXCS lxcs);
-    static Proxmox_LXC json_to_lxc(rapidjson::Document& json);
-    static Proxmox_LXCS json_to_lxcs(rapidjson::Document& json);
+    static Proxmox_LXC json_to_lxc(rapidjson::Value& json);
+    static Proxmox_LXCS json_to_lxcs(rapidjson::Value& json);
 };
 
 };
