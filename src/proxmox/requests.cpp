@@ -26,7 +26,7 @@ Requests::~Requests() {
     delete client;
 }
 
-rapidjson::Document Requests::response_to_document(Response resp) {
+rapidjson::Document& Requests::response_to_document(Response resp) {
     rapidjson::Document doc;
 
     if(resp.error) {
@@ -51,7 +51,7 @@ rapidjson::Document Requests::response_to_document(Response resp) {
     return doc;
 }
 
-rapidjson::Document Requests::list_lxcs() {
+rapidjson::Document& Requests::list_lxcs() {
     auto& config = Env_Struct::getInstance();
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/";
     Response resp = client->get(path.c_str());
@@ -60,7 +60,7 @@ rapidjson::Document Requests::list_lxcs() {
 }
 
 
-rapidjson::Document Requests::get_lxc(uint pct_id) {
+rapidjson::Document& Requests::get_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/current";
@@ -69,7 +69,7 @@ rapidjson::Document Requests::get_lxc(uint pct_id) {
     return response_to_document(resp);
 }
 
-rapidjson::Document Requests::get_lxc_interfaces(uint pct_id) {
+rapidjson::Document& Requests::get_lxc_interfaces(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/interfaces";
@@ -78,7 +78,7 @@ rapidjson::Document Requests::get_lxc_interfaces(uint pct_id) {
     return response_to_document(resp);
 }
 
-rapidjson::Document Requests::create_lxc(std::string payload) {
+rapidjson::Document& Requests::create_lxc(std::string payload) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc";
@@ -87,7 +87,7 @@ rapidjson::Document Requests::create_lxc(std::string payload) {
     return response_to_document(resp);
 }
 
-rapidjson::Document Requests::delete_lxc(uint pct_id) {
+rapidjson::Document& Requests::delete_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id);
@@ -97,7 +97,7 @@ rapidjson::Document Requests::delete_lxc(uint pct_id) {
     return response_to_document(resp);
 }
 
-rapidjson::Document Requests::stop_lxc(uint pct_id) {
+rapidjson::Document& Requests::stop_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/stop";
@@ -107,7 +107,7 @@ rapidjson::Document Requests::stop_lxc(uint pct_id) {
     return response_to_document(resp);
 }
 
-rapidjson::Document Requests::start_lxc(uint pct_id) {
+rapidjson::Document& Requests::start_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/start";

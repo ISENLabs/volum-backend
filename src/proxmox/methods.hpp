@@ -16,5 +16,6 @@ public:
     static bool delete_lxc(uint pct_id);
     static bool stop_lxc(uint pct_id);
     static bool start_lxc(uint pct_id);
+    
 };
 };
