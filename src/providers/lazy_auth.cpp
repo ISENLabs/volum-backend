@@ -16,6 +16,15 @@ using rapidjson::Document;
 using rapidjson::Value;
 
 User LazyAuth::checkAuth(std::string token){
+    // Check cache
+    auto& _cache = getAuthCache();
+    auto entry = _cache.get_element(token);
+    if(entry.has_value()){
+        std::cout << "Cache hit ! " << std::endl;
+        return *entry;
+    }
+    std::cout << "Cache miss... " << std::endl;
+
     std::string json = makeLazyRequest(token);
     Document doc;
     doc.Parse(json.c_str());
@@ -103,6 +112,9 @@ User LazyAuth::checkAuth(std::string token){
         Debug::Log("Error while reading json: no $.info.class_name ", "LA-CA");
         throw std::runtime_error("Error while authenticatin you");
     }
+
+    // Store user in cache
+    _cache.store_element(token, user);
     
     return user;
 }
@@ -133,3 +145,7 @@ std::string LazyAuth::makeLazyRequest(std::string auth_token){
     return resp.body;
 }
 
+Utils::Cache::CacheHandler<std::string, User>& LazyAuth::getAuthCache() {
+    static Utils::Cache::CacheHandler<std::string, User> cache_inst(LAZY_AUTH_CACHE_TTL);
+    return cache_inst;
+}

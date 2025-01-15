@@ -1,3 +1,4 @@
+#pragma once
 #include <memory>
 #include <map>
 #include <iostream>
@@ -14,7 +15,7 @@ namespace Utils::Cache{
 */
 
 // Get timestamp
-size_t timestamp(){
+inline size_t timestamp(){
     return static_cast<size_t>(std::time(nullptr));
 }
 
