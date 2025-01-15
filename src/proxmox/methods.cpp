@@ -44,6 +44,11 @@ std::string Methods::get_pv_ipv4(uint pct_id){
 }
 
 Proxmox_LXCS Methods::get_lxcs(){
-    Proxmox_LXCS lxcs;
+    Proxmox::Requests req;
+    rapidjson::Document _lxcs = req.list_lxcs();
+
+    Proxmox_LXCS lxcs = Converters::json_to_lxcs(_lxcs);
     return lxcs;
+    
+    throw std::runtime_error("Can't get $.data");
 }
