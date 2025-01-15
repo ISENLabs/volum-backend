@@ -27,17 +27,17 @@ rapidjson::Document Requests::response_to_document(Response resp) {
     rapidjson::Document doc;
 
     if(resp.error) {
-        Debug::Log(resp.error_reason.c_str(), "PVE-REQUEST-ERROR");
+        Debug::Log("Error in resp: " + resp.error_reason, "PVE-RQ-ERR");
         return doc;
     }
 
     doc.Parse(resp.body.c_str());
     if(doc.HasParseError()) {
-        Debug::Log("JSON Parse Error: " + std::to_string(doc.GetParseError()), "PVE-REQUEST-ERROR");
+        Debug::Log("JSON Parse Error: " + std::to_string(doc.GetParseError()), "PVE-RQ-ERR");
         return doc;
     }
 
-    Debug::Log(resp.body.c_str(), "PVE-REQUEST");
+    Debug::Log(resp.body.c_str(), "PVE-RQ");
     if(doc.HasMember("data")) {
         rapidjson::Document finalDoc;
         finalDoc.CopyFrom(doc["data"], finalDoc.GetAllocator());

@@ -7,7 +7,7 @@
 #include "src/services/webserver.hpp"
 #include "src/providers/lazy_auth.hpp"
 #include "src/utils/http.hpp"
-#include "src/proxmox/Requests.hpp"
+#include "src/proxmox/requests.hpp"
 
 using namespace Utils::Cache;
 using Utils::Debug;
