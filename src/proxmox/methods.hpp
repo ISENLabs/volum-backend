@@ -1,3 +1,4 @@
+#pragma once
 #include "requests.hpp"
 #include "structs.hpp"
 #include "utils.hpp"
