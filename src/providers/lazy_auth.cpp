@@ -20,10 +20,8 @@ User LazyAuth::checkAuth(std::string token){
     auto& _cache = getAuthCache();
     auto entry = _cache.get_element(token);
     if(entry.has_value()){
-        std::cout << "Cache hit ! " << std::endl;
         return *entry;
     }
-    std::cout << "Cache miss... " << std::endl;
 
     std::string json = makeLazyRequest(token);
     Document doc;
