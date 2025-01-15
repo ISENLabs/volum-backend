@@ -58,13 +58,13 @@ In this case, you'll always get an error description.
         "swap": "100000000",
         "netin": "100000000",
         "netout": "100000000",
-        "ip_address": "10.0.1.5"
+        "ip_address": "10.0.1.5",
+        "subdomain": "test"
     }
 ]
 ```
 **Notes**: 
 - if the user is admin, it will return all the available VMs.
-- if multiple VMs are returned, ip_address field is **NOT** included.
 
 ## VMs management
 ### List VMs
@@ -87,7 +87,8 @@ In this case, you'll always get an error description.
         "swap": "100000000",
         "netin": "100000000",
         "netout": "100000000",
-        "ip_address": "10.0.1.5"
+        "ip_address": "10.0.1.5",
+        "subdomain": "test"
     }
 ]
 ```

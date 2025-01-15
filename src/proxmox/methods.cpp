@@ -11,8 +11,6 @@ Proxmox_LXC Methods::get_lxc(uint pct_id){
     // Extract $.data
     if(_lxc.HasMember("data") && _lxc["data"].IsObject()){
         Proxmox_LXC lxc = Converters::json_to_lxc(_lxc["data"]);
-        std::string ipv4 = get_pv_ipv4(pct_id);
-        lxc.ip_address = ipv4;
         return lxc;
     }
     throw std::runtime_error("Can't get $.data");
