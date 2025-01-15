@@ -27,7 +27,7 @@ int main(){
     Debug::Log("Connecting to DB", "MAIN");
     auto& db = Database::getInstance();
     // Test: retrieve status
-    auto conn = db.getConnection();
+    auto& conn = db.getConnection();
     auto stmt = conn->createStatement();
     auto res = stmt->executeQuery("SELECT * FROM volum_status WHERE id = 1");
     while(res->next()){
@@ -39,20 +39,15 @@ int main(){
     std::shared_ptr<Providers::Auth::Lazy::LazyAuth> provider = std::make_shared<Providers::Auth::Lazy::LazyAuth>(auth_provider);
     env.set_auth_handler(provider);
 
-    Requests requests;
-    requests.list_lxcs();
+    // // Test proxmox conn
+    // Requests requests;
+    // requests.list_lxcs();
 
-    // // test http
-    // Utils::Http::Client client("https://api.sampleapis.com");
-    // auto resp = client.get("/coffee/hot");
-    // Debug::Log("Status: " + std::to_string(resp.status) + " " + resp.body, "MAIN");
-
-
-    /*Debug::Log("Launching web server ...", "MAIN");
+    Debug::Log("Launching web server ...", "MAIN");
     Services::WebServer ws;
 
     ws.register_routes();
-    ws.run_server(env.webserver_port);*/
+    ws.run_server(env.webserver_port);
 
     return 0;
 }

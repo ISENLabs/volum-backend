@@ -20,8 +20,13 @@ std::string lxc_to_json(Proxmox_LXC lxc){
         "\"mem\": " + std::to_string(lxc.mem) + ","
         "\"swap\": " + std::to_string(lxc.swap) + ","
         "\"netin\": " + std::to_string(lxc.net_in) + ","
-        "\"netout\": " + std::to_string(lxc.net_out) +
-    "}";
+        "\"netout\": " + std::to_string(lxc.net_out);
+
+    if(lxc.ip_address != ""){
+        json += ",\"ip_address\":\""+ lxc.ip_address +"\"";
+    }
+
+    json += "}";
     return json;
 }
 

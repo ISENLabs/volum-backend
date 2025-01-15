@@ -9,12 +9,12 @@ class Methods{
 private:
 
 public:
-    Proxmox_LXC get_lxc(uint pct_id);
-    Proxmox_LXCS get_lxcs();
-    Proxmox_LXC create_lxc(...); // TODO: Définir les arguments etc.
+    static Proxmox_LXC get_lxc(uint pct_id); // returns basic informations + pv ipv4 address
+    static Proxmox_LXCS get_lxcs();
+    static Proxmox_LXC create_lxc(...); // TODO: Définir les arguments etc.
 
-    bool delete_lxc(uint pct_id);
-    bool stop_lxc(uint pct_id);
-    bool start_lxc(uint pct_id);
+    static bool delete_lxc(uint pct_id);
+    static bool stop_lxc(uint pct_id);
+    static bool start_lxc(uint pct_id);
 };
 };
