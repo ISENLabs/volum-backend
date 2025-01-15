@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <optional>
+#include <ctime>
 
 namespace Utils::Cache{
 
@@ -37,11 +38,12 @@ public:
     }
 
     // Returns the value if not expired. If expired, returns null + deletes the element.
-    std::optional<T> get_element(K key){
+    std::optional<T> get_element(K key, bool update_ttl = true){
         auto it = _elements.find(key);
         if(it != _elements.end()){
             if(it->second.max_life >= timestamp()){
-                it->second.max_life = timestamp()+_ttl;
+                if(update_ttl)
+                    it->second.max_life = timestamp()+_ttl;
                 return *(it->second.object);
             }
             // too old ? 
