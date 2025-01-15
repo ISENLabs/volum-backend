@@ -33,10 +33,10 @@ typedef std::vector<Proxmox_LXC> Proxmox_LXCS;
 
 class Converters {
 public:
-    std::string lxc_to_json(Proxmox_LXC lxc);
-    std::string lxcs_to_json(Proxmox_LXCS lxcs);
-    Proxmox_LXC json_to_lxc(rapidjson::Document& json);
-    Proxmox_LXCS json_to_lxcs(rapidjson::Document& json);
+    static std::string lxc_to_json(Proxmox_LXC lxc);
+    static std::string lxcs_to_json(Proxmox_LXCS lxcs);
+    static Proxmox_LXC json_to_lxc(rapidjson::Document& json);
+    static Proxmox_LXCS json_to_lxcs(rapidjson::Document& json);
 };
 
 };
