@@ -1,10 +1,18 @@
 #include "methods.hpp"
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
-using namespace Proxmox::Structs;
-using Proxmox::Methods;
+#include "../services/database.hpp"
+#include "../utils/config.hpp"
 
-Proxmox_LXC Methods::get_lxc(uint pct_id){
+#include <iostream>
+#include <set>
+
+using namespace Proxmox::Structs;
+using namespace Utils::Config;
+using Proxmox::Methods;
+using Services::Database;
+
+Proxmox_LXC Methods::get_lxc(uint pct_id) {
     auto& cache = get_cache();
     auto _elt = cache.get_element(pct_id);
     if(_elt.has_value()){
@@ -63,8 +71,90 @@ Proxmox_LXCS Methods::get_lxcs(){
     }
 
     return lxcs;
-    
+
     throw std::runtime_error("Can't get $.data");
+}
+
+Proxmox_LXC Methods::create_lxc(uint pct_id, uint user_id, const char* subdomain) {
+    auto& config = Env_Struct::getInstance();
+    std::string payload = "vmid="+std::to_string(pct_id)+
+                          "&hostname="+subdomain+
+                          "&node="+config.pve_node+
+                          "&ostempltate="+config.vm_osTemplate+
+                          "&onboot="+(config.vm_onboot ? "1" : "0")+
+                          "&cores="+std::to_string(config.vm_cores)+
+                          "&memory="+std::to_string(config.vm_memory)+
+                          "&storage="+config.vm_storage+
+                          "&rootfs="+config.vm_storage+":"+std::to_string(config.vm_disk)+
+                          "&net0=name=eth0,bridge=vmbr0,rate="+std::to_string(config.vm_netSpeed)+
+                          "&bwlimit="+std::to_string(config.vm_ioSpeed)+
+                          "&start=1";
+
+    Proxmox::Requests req;
+    rapidjson::Document _lxcs = req.create_lxc(payload);
+    Proxmox_LXC lxc = get_lxc(pct_id);
+
+    // Add to cache
+    auto& cache = get_cache();
+    cache.store_element(lxc.vm_id, lxc);
+
+	// Add to db
+    auto& db = Database::getInstance();
+    auto& conn = db.getConnection();
+    auto stmt = conn->createStatement();
+    std::string sql = "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES("+std::to_string(pct_id)+", '"+lxc.ip_address+"', "+std::to_string(user_id)+", '"+subdomain+"');";
+    auto res = stmt->executeQuery(sql);
+
+    return lxc;
+}
+
+bool Methods::delete_lxc(uint pct_id) {
+    Proxmox::Requests req;
+    rapidjson::Document _lxc = req.delete_lxc(pct_id);
+
+    // Remove from cache
+    auto& cache = get_cache();
+    cache.remove(pct_id);
+
+    // Remove from db
+    auto& db = Database::getInstance();
+    auto& conn = db.getConnection();
+    auto stmt = conn->createStatement();
+    auto res = stmt->executeQuery("DELETE FROM volum_vms WHERE pct_id="+std::to_string(pct_id));
+
+    return true;
+}
+
+bool Methods::stop_lxc(uint pct_id) {
+    Proxmox::Requests req;
+    rapidjson::Document _lxc = req.stop_lxc(pct_id);
+
+    auto& cache = get_cache();
+    auto _elt = cache.get_element(pct_id);
+    if(_elt.has_value()) _elt->status = Proxmox_LXC_State::STOPPED;
+    else {
+        Proxmox_LXC lxc = get_lxc(pct_id);
+        lxc.status = Proxmox_LXC_State::STOPPED;
+        cache.store_element(lxc.vm_id, lxc);
+    }
+
+    return true;
+}
+
+bool Methods::start_lxc(uint pct_id) {
+    Proxmox::Requests req;
+    rapidjson::Document _lxc = req.start_lxc(pct_id);
+
+    auto& cache = get_cache();
+    auto _elt = cache.get_element(pct_id);
+    if(_elt.has_value()) _elt->status = Proxmox_LXC_State::RUNNING;
+    else {
+        Proxmox_LXC lxc = get_lxc(pct_id);
+        lxc.status = Proxmox_LXC_State::RUNNING;
+        cache.store_element(lxc.vm_id, lxc);
+    }
+
+    return true;
 }
 
 CacheHandler<uint, Proxmox_LXC>& Methods::get_cache(){

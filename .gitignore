@@ -6,6 +6,11 @@ vcpkg_installed/
 .console
 env.json
 test*.sh
+<<<<<<< Updated upstream
+=======
+.idea
+cmake-build-debug
+>>>>>>> Stashed changes
 
 # Prerequisites
 *.d

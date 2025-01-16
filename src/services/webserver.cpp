@@ -2,6 +2,10 @@
 #include "../handlers/routes/user.hpp"
 #include "../handlers/routes/list_vms.hpp"
 #include "../handlers/routes/get_vm.hpp"
+#include "../handlers/routes/create_vm.hpp"
+#include "../handlers/routes/delete_vm.hpp"
+#include "../handlers/routes/start_vm.hpp"
+#include "../handlers/routes/stop_vm.hpp"
 #include "webserver.hpp"
 
 using Services::WebServer;
@@ -45,6 +49,38 @@ void WebServer::register_routes(){
         ([&](const crow::request &req, uint pct_id) {
             auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
             return VMS::get_vm(ctx, pct_id);
+        });
+
+    // Start ONE vm
+    CROW_ROUTE(app, "/vms/<int>/stop")
+        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
+        ([&](const crow::request &req, uint pct_id) {
+            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+            return VMS::stop_vm(ctx, pct_id);
+        });
+
+    // Stop ONE vm
+    CROW_ROUTE(app, "/vms/<int>/start")
+        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
+        ([&](const crow::request &req, uint pct_id) {
+            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+            return VMS::start_vm(ctx, pct_id);
+    });
+
+    // Delete ONE vm
+    CROW_ROUTE(app, "/vms/<int>/delete")
+        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
+        ([&](const crow::request &req, uint pct_id) {
+            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+            return VMS::delete_vm(ctx, pct_id);
+    });
+
+    // Create ONE vm
+    CROW_ROUTE(app, "/vms/<int>/create")
+        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
+        ([&](const crow::request &req, uint pct_id) {
+            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+            return VMS::create_vm(ctx, pct_id);
         });
 }
 
