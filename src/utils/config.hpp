@@ -27,6 +27,7 @@ public:
     ushort vm_netSpeed;
     ushort vm_ioSpeed;
     std::string vm_gateway;
+    std::string vm_bridge;
 
     std::string db_host;
     ushort db_port;

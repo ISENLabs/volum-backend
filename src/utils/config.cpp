@@ -107,6 +107,11 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             vm_gateway = vms["gateway"].GetString();
         else
             throw std::runtime_error("Missing vms_options.gateway in config");
+
+        if(vms.HasMember("bridge") && vms["bridge"].IsString())
+            vm_bridge = vms["bridge"].GetString();
+        else
+            throw std::runtime_error("Missing vms_options.bridge in config");
     }
     else
         throw std::runtime_error("Missing vms_options in config");
