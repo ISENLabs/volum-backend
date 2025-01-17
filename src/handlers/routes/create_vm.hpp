@@ -59,22 +59,36 @@ namespace Handlers::Routes::VMS{
         if(!isSubdomainValid(subdomain)) 
             return "{\"success\":false, \"error\":\"invalid subdomain\"}";
 
+        // Limit to 1 vm/user (except. admins)
         auto& db = Database::getInstance();
         auto& conn = db.getConnection();
         std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
+                  "SELECT COUNT(*) FROM volum_vms WHERE user_id = ?"
+               )
+            );
+        stmnt->setInt(1, ctx.user.userId);
+        auto *res = stmnt->executeQuery();
+
+        if(res->next()){
+            if(res->getInt(1) > 0){
+                return "{\"success\":\"true\", \"error\":\"You already have a VM.\"}";
+            }
+        }
+
+        std::shared_ptr<sql::PreparedStatement> stmnt2(conn->prepareStatement(
                   "SELECT * FROM volum_vms ORDER BY id DESC LIMIT 1;"
                )
             );
 
-        auto *res = stmnt->executeQuery();
+        auto *res2 = stmnt2->executeQuery();
 
         try{
             uint pct_id = 0;
             std::string internal_ip = "";
 
-            if(res->next()) {
-                pct_id = res->getInt("ctid")+1;
-                internal_ip = res->getString("internal_ip");
+            if(res2->next()) {
+                pct_id = res2->getInt("ctid")+1;
+                internal_ip = res2->getString("internal_ip");
 
                 std::stringstream ss(internal_ip);
                 std::string byte;
@@ -88,10 +102,13 @@ namespace Handlers::Routes::VMS{
                     if(bytes[2] == 255) 
                         throw std::runtime_error("All ip taken");
                     bytes[2]++;
-                } else bytes[3]++;
+                } 
+                else 
+                    bytes[3]++;
 
                 internal_ip = std::to_string(bytes[0]) + "." + std::to_string(bytes[1]) + "." + std::to_string(bytes[2]) + "." + std::to_string(bytes[3]);
-            } else {
+            } 
+            else {
                 // First VM
                 auto& config = Env_Struct::getInstance();
                 pct_id = config.vm_startIndex;
