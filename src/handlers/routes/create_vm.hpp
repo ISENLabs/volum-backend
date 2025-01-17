@@ -98,7 +98,7 @@ namespace Handlers::Routes::VMS{
             return "{\"success\":true, \"message\":\"success\", \"data\":["+ Converters::lxc_to_json(lxc) +"]}";
         }
         catch(std::exception& ex){
-            Debug::Log("Error while getting vm: " + std::string(ex.what()), "R-GVM");
+            Debug::Log("Error while getting vm: " + std::string(ex.what()), "R-CVM");
             return "{\"success\":false, \"error\":\"internal error\"}";
         }
     }

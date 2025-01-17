@@ -38,7 +38,7 @@ namespace Handlers::Routes::VMS{
             }
         }
         catch(std::exception& ex){
-            Debug::Log("Error while getting vm: " + std::string(ex.what()), "R-GVM");
+            Debug::Log("Error while getting vm: " + std::string(ex.what()), "R-STOPVM");
             return "{\"success\":false, \"error\":\"internal error\"}";
         }
     }
