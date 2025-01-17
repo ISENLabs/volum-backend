@@ -29,9 +29,20 @@ namespace Handlers::Routes::VMS{
 
         try{
             if(res->next()){
+                Proxmox_LXC lxc = Proxmox::Methods::get_lxc(pct_id);
+                if(lxc.status == Proxmox::Structs::Proxmox_LXC_State::RUNNING) return "{\"success\":false, \"error\":\"must stop vm before delete it\"}";
+
                 if(!Proxmox::Methods::delete_lxc(pct_id)) {
                     throw std::runtime_error("Fail while deleting vm: " + std::to_string(pct_id));
                 }
+
+                std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
+                      "DELETE FROM volum_vms WHERE ctid=?;"
+                   )
+                );
+                stmnt->setInt(1, pct_id);
+                stmnt->executeQuery();
+
                 return "{\"success\":true, \"message\":\"success\"}";
             } else{
                 return "{\"success\":false, \"error\":\"unknown vm\"}";

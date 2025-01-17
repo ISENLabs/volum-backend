@@ -7,14 +7,16 @@
     },
     "vms_options": {
         "start_index": 2000,
-        "os_template": "template-debian-12.0-standard_12.0-1_amd64.tar.gz",
+        "start_ip": "10.11.0.10",
+        "os_template": "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst",
         "onboot": true,
         "cores": 1,
         "memory": 768,
-        "disk": 8,
+        "disk": 10,
         "storage": "local-lvm",
         "net_speed": 10,
-        "io_speed": 10000
+        "io_speed": 10000,
+        "gateway": "10.11.0.1"
     },
     "db_options": {
         "host": "localhost",

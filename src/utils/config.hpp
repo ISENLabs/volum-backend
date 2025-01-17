@@ -17,6 +17,7 @@ public:
     std::string pve_node;
 
     uint vm_startIndex;
+    std::string vm_startIp;
     std::string vm_osTemplate;
     bool vm_onboot;
     ushort vm_cores;
@@ -25,6 +26,7 @@ public:
     std::string vm_storage;
     ushort vm_netSpeed;
     ushort vm_ioSpeed;
+    std::string vm_gateway;
 
     std::string db_host;
     ushort db_port;

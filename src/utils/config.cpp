@@ -57,6 +57,11 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             vm_startIndex = vms["start_index"].GetUint();
         else
             throw std::runtime_error("Missing vms_options.start_index in config");
+
+        if(vms.HasMember("start_ip") && vms["start_ip"].IsString())
+            vm_startIp = vms["start_ip"].GetString();
+        else
+            throw std::runtime_error("Missing vms_options.start_ip in config");
     
         if(vms.HasMember("os_template") && vms["os_template"].IsString())
             vm_osTemplate = vms["os_template"].GetString();
@@ -97,6 +102,11 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             vm_ioSpeed = vms["io_speed"].GetUint();
         else
             throw std::runtime_error("Missing vms_options.io_speed in config");
+
+        if(vms.HasMember("gateway") && vms["gateway"].IsString())
+            vm_gateway = vms["gateway"].GetString();
+        else
+            throw std::runtime_error("Missing vms_options.gateway in config");
     }
     else
         throw std::runtime_error("Missing vms_options in config");

@@ -75,84 +75,67 @@ Proxmox_LXCS Methods::get_lxcs(){
     throw std::runtime_error("Can't get $.data");
 }
 
-Proxmox_LXC Methods::create_lxc(uint pct_id, uint user_id, const char* subdomain) {
+Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip) {
     auto& config = Env_Struct::getInstance();
-    std::string payload = "vmid="+std::to_string(pct_id)+
-                          "&hostname="+subdomain+
-                          "&node="+config.pve_node+
-                          "&ostempltate="+config.vm_osTemplate+
-                          "&onboot="+(config.vm_onboot ? "1" : "0")+
-                          "&cores="+std::to_string(config.vm_cores)+
-                          "&memory="+std::to_string(config.vm_memory)+
-                          "&storage="+config.vm_storage+
-                          "&rootfs="+config.vm_storage+":"+std::to_string(config.vm_disk)+
-                          "&net0=name=eth0,bridge=vmbr0,rate="+std::to_string(config.vm_netSpeed)+
-                          "&bwlimit="+std::to_string(config.vm_ioSpeed)+
-                          "&start=1";
+    std::string payload = "{\"vmid\": " + std::to_string(pct_id) + "," +
+        "\"hostname\": \"" + ct_name + "\"," +
+        "\"node\": \"" + config.pve_node + "\"," +
+        "\"ostemplate\": \"" + config.vm_osTemplate + "\"," +
+        "\"onboot\": " + (config.vm_onboot ? "true" : "false") + "," +
+        "\"cores\": " + std::to_string(config.vm_cores) + "," +
+        "\"memory\": " + std::to_string(config.vm_memory) + "," +
+        "\"storage\": \"" + config.vm_storage + "\"," +
+        "\"rootfs\": \"" + config.vm_storage + ":" + std::to_string(config.vm_disk) + "\"," +
+        "\"net0\": \"name=eth0,bridge=vmbr0,rate=" + std::to_string(config.vm_netSpeed) +
+                          ",ip="+ip+"/32," +
+                          "gw="+config.vm_gateway+"\"," +
+        "\"bwlimit\": " + std::to_string(config.vm_ioSpeed) + "," +
+        "\"start\": true}";
 
     Proxmox::Requests req;
-    rapidjson::Document _lxcs = req.create_lxc(payload);
+    req.create_lxc(payload);
+
     Proxmox_LXC lxc = get_lxc(pct_id);
+    if(config.vm_onboot) lxc.status = Proxmox_LXC_State::RUNNING;
 
     // Add to cache
     auto& cache = get_cache();
     cache.store_element(lxc.vm_id, lxc);
-
-	// Add to db
-    auto& db = Database::getInstance();
-    auto& conn = db.getConnection();
-    auto stmt = conn->createStatement();
-    std::string sql = "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES("+std::to_string(pct_id)+", '"+lxc.ip_address+"', "+std::to_string(user_id)+", '"+subdomain+"');";
-    auto res = stmt->executeQuery(sql);
 
     return lxc;
 }
 
 bool Methods::delete_lxc(uint pct_id) {
     Proxmox::Requests req;
-    rapidjson::Document _lxc = req.delete_lxc(pct_id);
+    if(!req.delete_lxc(pct_id)) return false;
 
     // Remove from cache
     auto& cache = get_cache();
     cache.remove(pct_id);
-
-    // Remove from db
-    auto& db = Database::getInstance();
-    auto& conn = db.getConnection();
-    auto stmt = conn->createStatement();
-    auto res = stmt->executeQuery("DELETE FROM volum_vms WHERE pct_id="+std::to_string(pct_id));
 
     return true;
 }
 
 bool Methods::stop_lxc(uint pct_id) {
     Proxmox::Requests req;
-    rapidjson::Document _lxc = req.stop_lxc(pct_id);
+    if(!req.stop_lxc(pct_id)) return false;
 
     auto& cache = get_cache();
-    auto _elt = cache.get_element(pct_id);
-    if(_elt.has_value()) _elt->status = Proxmox_LXC_State::STOPPED;
-    else {
-        Proxmox_LXC lxc = get_lxc(pct_id);
-        lxc.status = Proxmox_LXC_State::STOPPED;
-        cache.store_element(lxc.vm_id, lxc);
-    }
+    Proxmox_LXC lxc = get_lxc(pct_id);
+    lxc.status = Proxmox_LXC_State::STOPPED;
+    cache.store_element(lxc.vm_id, lxc);
 
     return true;
 }
 
 bool Methods::start_lxc(uint pct_id) {
     Proxmox::Requests req;
-    rapidjson::Document _lxc = req.start_lxc(pct_id);
+    if(!req.start_lxc(pct_id)) return false;
 
     auto& cache = get_cache();
-    auto _elt = cache.get_element(pct_id);
-    if(_elt.has_value()) _elt->status = Proxmox_LXC_State::RUNNING;
-    else {
-        Proxmox_LXC lxc = get_lxc(pct_id);
-        lxc.status = Proxmox_LXC_State::RUNNING;
-        cache.store_element(lxc.vm_id, lxc);
-    }
+    Proxmox_LXC lxc = get_lxc(pct_id);
+    lxc.status = Proxmox_LXC_State::RUNNING;
+    cache.store_element(lxc.vm_id, lxc);
 
     return true;
 }
