@@ -14,10 +14,24 @@ using namespace Utils::Config;
 
 namespace Handlers::Routes::VMS{
     bool isSubdomainValid(std::string subdomain){
-        if(subdomain.length() < 1 || subdomain.length() > 40) return false;
+        
+        static const std::set<char*> prohibed_subdomains = {
+            "login",
+            "register",
+            "admin",
+            "panel"
+        };
+
+        for(auto _prohibed : prohibed_subdomains)
+            if(subdomain.c_str() == _prohibed)
+                return false;
+
+        if(subdomain.length() < 3 || subdomain.length() > 40) 
+            return false;
 
         for(int i = 1; i < subdomain.length(); i++){
-            if(!std::isalnum(subdomain[i]) && subdomain[i] != '-') return false;
+            if(!std::isalnum(subdomain[i]) && subdomain[i] != '-') 
+                return false;
         }
 
         auto& db = Database::getInstance();
@@ -30,7 +44,8 @@ namespace Handlers::Routes::VMS{
         auto *res = stmnt->executeQuery();
         while(res->next()){
             // If domain already exists
-            if(subdomain == res->getString("subdomain")) return false;
+            if(subdomain == res->getString("subdomain")) 
+                return false;
         }
 
         return true;
@@ -41,7 +56,8 @@ namespace Handlers::Routes::VMS{
             return "{\"success\":false, \"error\":\"Unauthenticated user\"}";
         }
 
-        if(!isSubdomainValid(subdomain)) return "{\"success\":false, \"error\":\"invalid subdomain\"}";
+        if(!isSubdomainValid(subdomain)) 
+            return "{\"success\":false, \"error\":\"invalid subdomain\"}";
 
         auto& db = Database::getInstance();
         auto& conn = db.getConnection();
@@ -69,7 +85,8 @@ namespace Handlers::Routes::VMS{
                 }
 
                 if(bytes[3] == 255) {
-                    if(bytes[2] == 255) throw std::runtime_error("All ip taken");
+                    if(bytes[2] == 255) 
+                        throw std::runtime_error("All ip taken");
                     bytes[2]++;
                 } else bytes[3]++;
 
