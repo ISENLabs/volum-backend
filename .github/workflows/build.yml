@@ -25,7 +25,7 @@ jobs:
     - name: Install vcpkg
       uses: lukka/run-vcpkg@v11
       with:
-        vcpkgGitCommitId: '66248ff4dbafdff577df74e4d9a8e948389fab09'
+        vcpkgGitCommitId: '9a6da16845eca8d6ed70be416c1acbd206894c7f'
 
     - name: Install Ninja for linux
       if: runner.os == 'Linux'
