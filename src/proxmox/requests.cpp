@@ -79,7 +79,8 @@ bool Requests::create_lxc(std::string payload) {
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc";
     Response resp = client->post(path.c_str(), payload.c_str());
 
-    if(resp.body.length() == 0) return false;
+    if(resp.body.length() == 0) 
+        return false;
     return true;
 }
 

@@ -75,7 +75,7 @@ Proxmox_LXCS Methods::get_lxcs(){
     throw std::runtime_error("Can't get $.data");
 }
 
-Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip) {
+Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip, std::string password) {
     auto& config = Env_Struct::getInstance();
     std::string payload = "{\"vmid\": " + std::to_string(pct_id) + "," +
         "\"hostname\": \"" + ct_name + "\"," +
@@ -86,13 +86,15 @@ Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip
         "\"memory\": " + std::to_string(config.vm_memory) + "," +
         "\"storage\": \"" + config.vm_storage + "\"," +
         "\"rootfs\": \"" + config.vm_storage + ":" + std::to_string(config.vm_disk) + "\"," +
-        "\"net0\": \"name=eth0,bridge=vmbr0,rate=" + std::to_string(config.vm_netSpeed) +
+        "\"net0\": \"name=eth0,bridge="+ config.vm_bridge +",rate=" + std::to_string(config.vm_netSpeed) +
                           ",ip="+ip+"/32," +
                           "gw="+config.vm_gateway+"\"," +
         "\"bwlimit\": " + std::to_string(config.vm_ioSpeed) + "," +
+        "\"password\": \"" + password + "\"," +
         "\"start\": true}";
 
     Proxmox::Requests req;
+    std::cout << payload << std::endl;
     req.create_lxc(payload);
 
     Proxmox_LXC lxc = get_lxc(pct_id);

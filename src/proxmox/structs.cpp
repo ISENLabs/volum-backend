@@ -30,6 +30,9 @@ std::string Converters::lxc_to_json(Proxmox_LXC lxc){
         json += ",\"subdomain\":\""+ lxc.subdomain +"\"";
     }
 
+    if(lxc.password != ""){
+        json += ",\"password\":\""+ lxc.password +"\"";
+    }
     json += "}";
     return json;
 }

@@ -29,6 +29,7 @@ struct Proxmox_LXC { // LinuX Containers
 
     std::string ip_address = ""; // empty by default!
     std::string subdomain = "";
+    std::string password = ""; // empty by default!
 };
 typedef std::vector<Proxmox_LXC> Proxmox_LXCS;
 

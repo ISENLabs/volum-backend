@@ -115,7 +115,16 @@ namespace Handlers::Routes::VMS{
                 internal_ip = config.vm_startIp;
             }
 
-            Proxmox_LXC lxc = Proxmox::Methods::create_lxc(pct_id, server_name, internal_ip);
+            // Generate password
+            std::string password = "";
+            char valid_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-";
+            srand(time(NULL));
+
+            for(int i = 0; i < 12; i++) 
+                password += valid_chars[rand() % strlen(valid_chars)];
+
+            Proxmox_LXC lxc = Proxmox::Methods::create_lxc(pct_id, server_name, internal_ip, password);
+            lxc.password = password; // so it will be displayed to the user
 
             // Add to db
             std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
