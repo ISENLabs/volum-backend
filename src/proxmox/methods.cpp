@@ -107,7 +107,8 @@ Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip
 
 bool Methods::delete_lxc(uint pct_id) {
     Proxmox::Requests req;
-    if(!req.delete_lxc(pct_id)) return false;
+    if(!req.delete_lxc(pct_id)) 
+        return false;
 
     // Remove from cache
     auto& cache = get_cache();

@@ -15,7 +15,7 @@ using namespace Utils::Config;
 namespace Handlers::Routes::VMS{
     bool isSubdomainValid(std::string subdomain){
         
-        static const std::set<char*> prohibed_subdomains = {
+        static const std::set<const char*> prohibed_subdomains = {
             "login",
             "register",
             "admin",

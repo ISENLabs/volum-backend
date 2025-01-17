@@ -27,6 +27,7 @@ Requests::~Requests() {
 }
 
 rapidjson::Document Requests::response_to_document(Response resp) {
+    std::cout << resp.body << std::endl;
     rapidjson::Document doc;
 
     if(resp.error) {
@@ -88,8 +89,10 @@ bool Requests::delete_lxc(uint pct_id) {
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id);
     std::string body = "";
     Response resp = client->del(path.c_str(), body.c_str());
+    std::cout << resp.body << std::endl;
 
-    if(resp.body.length() == 0) return false;
+    if(resp.body.length() == 0) 
+        return false;
     return true;
 }
 

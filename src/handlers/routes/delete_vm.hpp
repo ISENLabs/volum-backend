@@ -5,9 +5,13 @@
 #include <set>
 #include <crow.h>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 using Services::Database;
 using namespace Proxmox::Structs;
+using namespace std::this_thread;
+using namespace std::chrono_literals;
 
 namespace Handlers::Routes::VMS{
     std::string delete_vm(Handlers::Middlewares::Auth::context& ctx, uint pct_id){
@@ -30,18 +34,24 @@ namespace Handlers::Routes::VMS{
         try{
             if(res->next()){
                 Proxmox_LXC lxc = Proxmox::Methods::get_lxc(pct_id);
-                if(lxc.status == Proxmox::Structs::Proxmox_LXC_State::RUNNING) return "{\"success\":false, \"error\":\"must stop vm before delete it\"}";
+                if(lxc.status == Proxmox::Structs::Proxmox_LXC_State::RUNNING){
+                    // Stop the vm
+                    if(!Proxmox::Methods::stop_lxc(pct_id)){
+                        return "{\"success\":\"false\", \"error\":\"Can't automatically stop the VM. Please stop it before deleting.\"}";
+                    }
+                    sleep_for(2s); // Wait for the actual ct shutdown
+                }
 
                 if(!Proxmox::Methods::delete_lxc(pct_id)) {
-                    throw std::runtime_error("Fail while deleting vm: " + std::to_string(pct_id));
+                    throw std::runtime_error("Error while deleting vm: " + std::to_string(pct_id));
                 }
 
                 std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
-                      "DELETE FROM volum_vms WHERE ctid=?;"
+                      "DELETE FROM volum_vms WHERE ctid= ? LIMIT 1;"
                    )
                 );
                 stmnt->setInt(1, pct_id);
-                stmnt->executeQuery();
+                // stmnt->executeQuery();
 
                 return "{\"success\":true, \"message\":\"success\"}";
             } else{
