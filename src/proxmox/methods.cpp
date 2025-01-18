@@ -12,6 +12,38 @@ using namespace Utils::Config;
 using Proxmox::Methods;
 using Services::Database;
 
+std::string escape_string(const std::string& str) {
+    std::string result;
+    for (char c : str) {
+        switch (c) {
+            case ' ':
+                result += "%20";
+                break;
+            case '&':
+                result += "%26";
+                break;
+            case '=':
+                result += "%3D";
+                break;
+            case '%':
+                result += "%25";
+                break;
+            case ':':
+                result += "%3A";
+                break;
+            case '/':
+                result += "%2F";
+                break;
+            case ',':
+                result += "%2C";
+                break;
+            default:
+                result += c;
+        }
+    }
+    return result;
+}
+
 Proxmox_LXC Methods::get_lxc(uint pct_id) {
     auto& cache = get_cache();
     auto _elt = cache.get_element(pct_id);
@@ -77,28 +109,29 @@ Proxmox_LXCS Methods::get_lxcs(){
 
 Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip, std::string password) {
     auto& config = Env_Struct::getInstance();
-    std::string payload = "{\"vmid\": " + std::to_string(pct_id) + "," +
-        "\"hostname\": \"" + ct_name + "\"," +
-        "\"node\": \"" + config.pve_node + "\"," +
-        "\"ostemplate\": \"" + config.vm_osTemplate + "\"," +
-        "\"onboot\": " + (config.vm_onboot ? "true" : "false") + "," +
-        "\"cores\": " + std::to_string(config.vm_cores) + "," +
-        "\"memory\": " + std::to_string(config.vm_memory) + "," +
-        "\"storage\": \"" + config.vm_storage + "\"," +
-        "\"rootfs\": \"" + config.vm_storage + ":" + std::to_string(config.vm_disk) + "\"," +
-        "\"net0\": \"name=eth0,bridge="+ config.vm_bridge +",rate=" + std::to_string(config.vm_netSpeed) +
-                          ",ip="+ip+"/32," +
-                          "gw="+config.vm_gateway+"\"," +
-        "\"bwlimit\": " + std::to_string(config.vm_ioSpeed) + "," +
-        "\"password\": \"" + password + "\"," +
-        "\"start\": true}";
+    std::string payload = "vmid=" + std::to_string(pct_id) + 
+        "&hostname=" + escape_string(ct_name) + 
+        "&ostemplate=" + escape_string(config.vm_osTemplate) + 
+        "&onboot=" + (config.vm_onboot ? "1" : "0") + 
+        "&cores=" + std::to_string(config.vm_cores) + 
+        "&memory=" + std::to_string(config.vm_memory) + 
+        "&swap=512" + // by default
+        "&rootfs=" + escape_string(config.vm_storage + ":" + std::to_string(config.vm_disk)) + 
+        "&net0=" + escape_string(std::string("name=eth0,bridge=" + config.vm_bridge + ",rate=" + std::to_string(config.vm_netSpeed))) + 
+              escape_string(",ip=" + ip + "/32") + 
+              escape_string(",gw=" + config.vm_gateway) + 
+        "&unprivileged=1" +
+        "&features=nesting%3D1" +
+        "&bwlimit=" + std::to_string(config.vm_ioSpeed) + 
+        "&password=" + escape_string(password) + 
+        "&start=1&ssh-public-keys=";
 
     Proxmox::Requests req;
-    std::cout << payload << std::endl;
     req.create_lxc(payload);
 
     Proxmox_LXC lxc = get_lxc(pct_id);
-    if(config.vm_onboot) lxc.status = Proxmox_LXC_State::RUNNING;
+    if(config.vm_onboot) 
+        lxc.status = Proxmox_LXC_State::RUNNING;
 
     // Add to cache
     auto& cache = get_cache();

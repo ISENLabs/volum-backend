@@ -10,7 +10,7 @@ using Utils::Debug;
 
 Requests::Requests() {
     auto& config = Env_Struct::getInstance();
-    client = new Client(config.pve_host.c_str());
+    client = new Client(config.pve_host.c_str(), false);
     client->set_timeout(10);
 
     std::string token = "PVEAPIToken="+config.pve_tokenId+"="+config.pve_tokenSecret;
@@ -27,7 +27,6 @@ Requests::~Requests() {
 }
 
 rapidjson::Document Requests::response_to_document(Response resp) {
-    std::cout << resp.body << std::endl;
     rapidjson::Document doc;
 
     if(resp.error) {
@@ -90,7 +89,6 @@ bool Requests::delete_lxc(uint pct_id) {
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id);
     std::string body = "";
     Response resp = client->del(path.c_str(), body.c_str());
-    std::cout << resp.body << std::endl;
 
     if(resp.body.length() == 0) 
         return false;

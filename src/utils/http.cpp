@@ -64,7 +64,7 @@ Response Client::post(const char* path, const char* body){
 
     client->set_connection_timeout(timeout);
     Response response;
-    if(auto res = client->Post(path, headers, body, json ? "application/json" : "multipart/form-data")){
+    if(auto res = client->Post(path, headers, body, json ? "application/json" : "application/x-www-form-urlencoded")){
         response.status = res->status;
         response.body = res->body;
         response.error = false;
@@ -90,7 +90,7 @@ Response Client::put(const char* path, const char* body){
 
     client->set_connection_timeout(timeout);
     Response response;
-    if(auto res = client->Put(path, headers, body, json ? "application/json" : "multipart/form-data")){
+    if(auto res = client->Put(path, headers, body, json ? "application/json" : "application/x-www-form-urlencoded")){
         response.status = res->status;
         response.body = res->body;
         response.error = false;
@@ -116,7 +116,7 @@ Response Client::del(const char* path, const char* body){
 
     client->set_connection_timeout(timeout);
     Response response;
-    if(auto res = client->Delete(path, headers, body, json ? "application/json" : "multipart/form-data")){
+    if(auto res = client->Delete(path, headers, body, json ? "application/json" : "application/x-www-form-urlencoded")){
         response.status = res->status;
         response.body = res->body;
         response.error = false;
