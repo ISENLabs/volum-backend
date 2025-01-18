@@ -125,6 +125,7 @@ namespace Handlers::Routes::VMS{
 
             Proxmox_LXC lxc = Proxmox::Methods::create_lxc(pct_id, server_name, internal_ip, password);
             lxc.password = password; // so it will be displayed to the user
+            lxc.subdomain = subdomain;
 
             // Add to db
             std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(

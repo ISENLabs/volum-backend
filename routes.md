@@ -95,3 +95,40 @@ In this case, you'll always get an error description.
 **Notes**: 
 - If the user isn't owner of the vm + isn't admin, it will return the "unkown vm" error.
 - If the vm doesn't exists, it will return the "unknown vm" error.
+
+### Create a VM
+**POST** /vms/create
+**BODY**: `{"server_name":"the-name", "subdomain":"supercool"}`
+**Response data**:
+```json
+[
+    {
+        "status": "online",
+        "name": "super-vm",
+        "vmid": "2000",
+        "cpus": "2",
+        "maxmem": "100000000",
+        "maxdisk": "100000000",
+        "maxswap": "100000000",
+        "uptime": "100000000",
+        "cpu": "0.2454",
+        "disk": "100000000",
+        "mem": "100000000",
+        "swap": "100000000",
+        "netin": "100000000",
+        "netout": "100000000",
+        "ip_address": "10.0.1.5",
+        "subdomain": "supercool",
+        "password":"auto-generated"
+    }
+]
+```
+
+### Stop a VM
+**POST** /vms/:id/stop
+
+### Start a VM
+**POST** /vms/:id/start
+
+### Delete a VM
+**DELETE** /vms/:id
