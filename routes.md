@@ -131,4 +131,5 @@ In this case, you'll always get an error description.
 **POST** /vms/:id/start
 
 ### Delete a VM
-**DELETE** /vms/:id
+**POST** /vms/:id
+**Note**: Yes, i know "delete" is the standard, but I couldn't get the CORS to work with the delete method (??)

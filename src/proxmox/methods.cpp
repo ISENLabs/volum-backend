@@ -46,7 +46,7 @@ std::string escape_string(const std::string& str) {
 
 Proxmox_LXC Methods::get_lxc(uint pct_id) {
     auto& cache = get_cache();
-    auto _elt = cache.get_element(pct_id);
+    auto _elt = cache.get_element(pct_id, false);
     if(_elt.has_value()){
         return *_elt;
     }

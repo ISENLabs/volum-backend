@@ -46,7 +46,7 @@ void WebServer::register_routes(){
 
     // Get or Delete ONE vm details
     CROW_ROUTE(app, "/vms/<int>")
-        .methods("GET"_method, "DELETE"_method)
+        .methods("GET"_method, "POST"_method)
         .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
         ([&](const crow::request &req, uint pct_id) {
             auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
@@ -92,9 +92,10 @@ void WebServer::register_routes(){
     auto& cors = app.get_middleware<crow::CORSHandler>();
     // Allow everything
     cors.global()
-        .methods("OPTIONS"_method, "POST"_method, "GET"_method, "DELETE"_method)
-        .origin(Env_Struct::getInstance().auth_corsFrontend)
-	    .allow_credentials();
+        .methods("OPTIONS"_method, "POST"_method, "GET"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
+	    .headers("*")
+	    .allow_credentials()
+        .origin(Env_Struct::getInstance().auth_corsFrontend);
 }
 
 void WebServer::run_server(uint port){
