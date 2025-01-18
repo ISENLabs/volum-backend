@@ -36,12 +36,26 @@ void WebServer::register_routes(){
             return User_Routes::infos(ctx);
         });
 
-    // List VMs
+    // List/create VM
     CROW_ROUTE(app, "/vms")
+        .methods("GET"_method, "POST"_method)
         .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
         ([&](const crow::request &req) {
             auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
-            return VMS::list_vms(ctx);
+            if(req.method == "GET"_method)
+                return crow::response(VMS::list_vms(ctx));
+            else{
+                auto body = crow::json::load(req.body);
+
+                if (!body || !body.has("server_name") || !body.has("subdomain"))
+                    return crow::response("{\"success\":false, \"error\":\"Missing server_name or subdomain\"}");
+
+                std::string server_name = body["server_name"].s();
+                std::string subdomain = body["subdomain"].s();
+
+                auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
+                return crow::response(VMS::create_vm(ctx, server_name, subdomain));
+            }
         });
 
     // Get or Delete ONE vm details
@@ -71,31 +85,15 @@ void WebServer::register_routes(){
             return VMS::start_vm(ctx, pct_id);
         });
 
-    // Create ONE vm
-    CROW_ROUTE(app, "/vms/create")
-        .methods("POST"_method)
-        .CROW_MIDDLEWARES(app, Handlers::Middlewares::Auth)
-        ([&](const crow::request &req) {
-            auto body = crow::json::load(req.body);
-
-            if (!body || !body.has("server_name") || !body.has("subdomain"))
-                return crow::response("{\"success\":false, \"error\":\"Missing server_name or subdomain\"}");
-
-            std::string server_name = body["server_name"].s();
-            std::string subdomain = body["subdomain"].s();
-
-            auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
-            return crow::response(VMS::create_vm(ctx, server_name, subdomain));
-        });
-
     // Set CORS options
     auto& cors = app.get_middleware<crow::CORSHandler>();
     // Allow everything
     cors.global()
         .methods("OPTIONS"_method, "POST"_method, "GET"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
-	    .headers("*")
-	    .allow_credentials()
-        .origin(Env_Struct::getInstance().auth_corsFrontend);
+        .headers("*")
+        .allow_credentials()
+        .origin(Env_Struct::getInstance().auth_corsFrontend)
+        .max_age(3600);
 }
 
 void WebServer::run_server(uint port){
