@@ -6,6 +6,8 @@ vcpkg_installed/
 .console
 env.json
 test*.sh
+.idea
+cmake-build-debug
 
 # Prerequisites
 *.d

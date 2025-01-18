@@ -26,6 +26,13 @@ std::string Converters::lxc_to_json(Proxmox_LXC lxc){
         json += ",\"ip_address\":\""+ lxc.ip_address +"\"";
     }
 
+    if(lxc.subdomain != ""){
+        json += ",\"subdomain\":\""+ lxc.subdomain +"\"";
+    }
+
+    if(lxc.password != ""){
+        json += ",\"password\":\""+ lxc.password +"\"";
+    }
     json += "}";
     return json;
 }

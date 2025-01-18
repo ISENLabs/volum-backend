@@ -10,7 +10,7 @@ using Utils::Debug;
 
 Requests::Requests() {
     auto& config = Env_Struct::getInstance();
-    client = new Client(config.pve_host.c_str());
+    client = new Client(config.pve_host.c_str(), false);
     client->set_timeout(10);
 
     std::string token = "PVEAPIToken="+config.pve_tokenId+"="+config.pve_tokenSecret;
@@ -72,41 +72,47 @@ rapidjson::Document Requests::get_lxc_interfaces(uint pct_id) {
     return response_to_document(resp);
 }
 
-rapidjson::Document Requests::create_lxc(std::string payload) {
+bool Requests::create_lxc(std::string payload) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc";
     Response resp = client->post(path.c_str(), payload.c_str());
 
-    return response_to_document(resp);
+    if(resp.body.length() == 0) 
+        return false;
+    return true;
 }
 
-rapidjson::Document Requests::delete_lxc(uint pct_id) {
+bool Requests::delete_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id);
-    std::string body = "node="+config.pve_node+"&vmid="+std::to_string(pct_id);
+    std::string body = "";
     Response resp = client->del(path.c_str(), body.c_str());
 
-    return response_to_document(resp);
+    if(resp.body.length() == 0) 
+        return false;
+    return true;
 }
 
-rapidjson::Document Requests::stop_lxc(uint pct_id) {
+bool Requests::stop_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/stop";
-    std::string body = "node="+config.pve_node+"&vmid="+std::to_string(pct_id);
+    std::string body = "{\"vmid\":"+std::to_string(pct_id)+", \"node\":\""+config.pve_node+"\"}";
     Response resp = client->post(path.c_str(), body.c_str());
 
-    return response_to_document(resp);
+    if(resp.body.length() == 0) return false;
+    return true;
 }
 
-rapidjson::Document Requests::start_lxc(uint pct_id) {
+bool Requests::start_lxc(uint pct_id) {
     auto& config = Env_Struct::getInstance();
 
     std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc/"+std::to_string(pct_id)+"/status/start";
-    std::string body = "node="+config.pve_node+"&vmid="+std::to_string(pct_id);
+    std::string body = "{\"vmid\":"+std::to_string(pct_id)+", \"node\":\""+config.pve_node+"\"}";
     Response resp = client->post(path.c_str(), body.c_str());
 
-    return response_to_document(resp);
+    if(resp.body.length() == 0) return false;
+    return true;
 }
