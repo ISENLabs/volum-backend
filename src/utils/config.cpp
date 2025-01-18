@@ -162,6 +162,11 @@ void Env_Struct::init_checkConfig(rapidjson::Document& doc){
             auth_cookieName = auth["cookie_name"].GetString(); // Let's assume the user entered a well-formated route
         else
             throw std::runtime_error("Missing auth.cookie_name in config");
+
+        if(auth.HasMember("cors_frontend") && auth["cors_frontend"].IsString())
+            auth_corsFrontend = auth["cors_frontend"].GetString(); // Let's assume the user entered a well-formated route
+        else
+            throw std::runtime_error("Missing auth.cors_frontend in config");
     }
     else
         throw std::runtime_error("Missing auth in config");

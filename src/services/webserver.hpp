@@ -3,11 +3,12 @@
 #include <iostream>
 #include <memory>
 #include <crow.h>
+#include <crow/middlewares/cors.h>
 
 namespace Services{
 class WebServer{
 private:
-    crow::App<Handlers::Middlewares::Auth, Handlers::Middlewares::RequestLogger> app;
+    crow::App<crow::CORSHandler, Handlers::Middlewares::Auth, Handlers::Middlewares::RequestLogger> app;
 
 public:
     WebServer();

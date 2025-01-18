@@ -8,7 +8,7 @@ namespace Handlers::Routes::Defaults{
         return "{\"success\":true, \"message\":\"Online !\"}";
     }
 
-    std::string handle_notfounrd(){
+    std::string handle_notfound(){
         return "{\"success\":false, \"error\":\"not found\"}";
     }
 };

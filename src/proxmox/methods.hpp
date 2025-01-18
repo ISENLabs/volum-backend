@@ -4,7 +4,7 @@
 #include "utils.hpp"
 #include "../utils/cache.hpp"
 
-#define PROXMOX_LXC_CACHE_TTL 15
+#define PROXMOX_LXC_CACHE_TTL 10
 
 using namespace Proxmox::Structs;
 using namespace Utils::Cache;

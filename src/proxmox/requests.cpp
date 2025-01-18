@@ -10,7 +10,7 @@ using Utils::Debug;
 
 Requests::Requests() {
     auto& config = Env_Struct::getInstance();
-    client = new Client(config.pve_host.c_str(), false);
+    client = new Client(config.pve_host.c_str(), true);
     client->set_timeout(10);
 
     std::string token = "PVEAPIToken="+config.pve_tokenId+"="+config.pve_tokenSecret;
@@ -74,13 +74,21 @@ rapidjson::Document Requests::get_lxc_interfaces(uint pct_id) {
 
 bool Requests::create_lxc(std::string payload) {
     auto& config = Env_Struct::getInstance();
-
-    std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc";
-    Response resp = client->post(path.c_str(), payload.c_str());
-
-    if(resp.body.length() == 0) 
-        return false;
-    return true;
+    
+    client->set_json(false);
+    try{
+        std::string path = "/api2/json/nodes/"+config.pve_node+"/lxc";
+        Response resp = client->post(path.c_str(), payload.c_str());
+        client->set_json(true);
+        
+        if(resp.body.length() == 0) 
+            return false;
+        return true;
+    }
+    catch(...){
+        client->set_json(true);
+    	return false;
+    }
 }
 
 bool Requests::delete_lxc(uint pct_id) {
@@ -102,7 +110,8 @@ bool Requests::stop_lxc(uint pct_id) {
     std::string body = "{\"vmid\":"+std::to_string(pct_id)+", \"node\":\""+config.pve_node+"\"}";
     Response resp = client->post(path.c_str(), body.c_str());
 
-    if(resp.body.length() == 0) return false;
+    if(resp.body.length() == 0) 
+	    return false;
     return true;
 }
 
