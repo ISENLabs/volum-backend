@@ -22,7 +22,7 @@ WebServer::~WebServer(){
 
 void WebServer::register_routes(){
     //Register home (/) + 404
-    CROW_CATCHALL_ROUTE(app)(Defaults::handle_notfound);
+//    CROW_CATCHALL_ROUTE(app)(Defaults::handle_notfound);
     
     CROW_ROUTE(app, "/")
         ([]() -> std::string

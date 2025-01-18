@@ -23,9 +23,12 @@ void Client::set_header(const char* key, const char* value){
 }
 
 void Client::set_timeout(uint timeout){
-    this->timeout = timeout;
+    timeout = timeout;
 }
 
+void Client::set_json(bool _json){
+    json = _json;
+}
 /// @brief Make a GET request
 /// @param path example: "/api/v1/resource"
 /// @return Response object

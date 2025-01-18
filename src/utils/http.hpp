@@ -20,6 +20,7 @@ public:
     void set_header(const char* key, const char* value);
     void set_timeout(uint timeout);
     void set_cert_validation(bool validate);
+    void set_json(bool _json);
 
     Response get(const char* path);
     Response post(const char* path, const char* body);
