@@ -13,7 +13,7 @@ using namespace Handlers::Middlewares;
 using namespace Handlers::Routes;
 
 WebServer::WebServer(){
-    crow::App<Handlers::Middlewares::Auth, RequestLogger> app;
+    crow::App<crow::CORSHandler, Handlers::Middlewares::Auth, RequestLogger> app;
 }
 
 WebServer::~WebServer(){
@@ -22,7 +22,8 @@ WebServer::~WebServer(){
 
 void WebServer::register_routes(){
     //Register home (/) + 404
-    CROW_CATCHALL_ROUTE(app)(Defaults::handle_notfounrd);
+    CROW_CATCHALL_ROUTE(app)(Defaults::handle_notfound);
+    
     CROW_ROUTE(app, "/")
         ([]() -> std::string
         { return Defaults::default_route(); });
@@ -86,6 +87,14 @@ void WebServer::register_routes(){
             auto& ctx = app.get_context<Handlers::Middlewares::Auth>(req);
             return crow::response(VMS::create_vm(ctx, server_name, subdomain));
         });
+
+    // Set CORS options
+    auto& cors = app.get_middleware<crow::CORSHandler>();
+    // Allow everything
+    cors.global()
+        .methods("OPTIONS"_method, "POST"_method, "GET"_method, "DELETE"_method)
+        .origin(Env_Struct::getInstance().auth_corsFrontend)
+	    .allow_credentials();
 }
 
 void WebServer::run_server(uint port){

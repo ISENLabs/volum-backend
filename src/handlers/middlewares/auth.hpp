@@ -68,7 +68,6 @@ struct Auth : crow::ILocalMiddleware{
     }
 
     void after_handle(crow::request& req, crow::response& res, context& ctx) {}
-
 };
 
 };

@@ -38,6 +38,7 @@ public:
     std::string auth_lazyHostname;
     std::string auth_lazyRoute;
     std::string auth_cookieName;
+    std::string auth_corsFrontend;
 
     uint webserver_port;
 
