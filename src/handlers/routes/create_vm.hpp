@@ -51,10 +51,26 @@ namespace Handlers::Routes::VMS{
         return true;
     }
 
+    // Check if valid hostname (alphanumeric + '-').
+    bool isValidServerName(std::string server_name){
+        if(server_name.length() < 3 || server_name.length() > 40) 
+            return false;
+
+        for(int i = 1; i < server_name.length(); i++){
+            if(!std::isalnum(server_name[i]) && server_name[i] != '-') 
+                return false;
+        }
+
+        return true;
+    }
+
     std::string create_vm(Handlers::Middlewares::Auth::context& ctx, const std::string& server_name, const std::string& subdomain){
         if(ctx.user.userId < 1){
             return "{\"success\":false, \"error\":\"Unauthenticated user\"}";
         }
+
+        if(!isValidServerName(server_name))
+            return "{\"success\":false, \"error\":\"invalid server name.\"}";
 
         if(!isSubdomainValid(subdomain)) 
             return "{\"success\":false, \"error\":\"invalid subdomain\"}";

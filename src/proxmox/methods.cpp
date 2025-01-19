@@ -103,8 +103,6 @@ Proxmox_LXCS Methods::get_lxcs(){
     }
 
     return lxcs;
-
-    throw std::runtime_error("Can't get $.data");
 }
 
 Proxmox_LXC Methods::create_lxc(uint pct_id, std::string ct_name, std::string ip, std::string password) {
