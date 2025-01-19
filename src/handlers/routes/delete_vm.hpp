@@ -19,6 +19,10 @@ namespace Handlers::Routes::VMS{
             return "{\"success\":false, \"error\":\"Unauthenticated user\"}";
         }
 
+        auto& env = Env_Struct::getInstance();
+        if(pct_id < env.vm_startIndex || pct_id >= env.vm_startIndex + 256*256) // /16
+            return "{\"success\":false, \"error\":\"api misuse?\"}";
+
         // Get Mariadb vms list
         auto& db = Database::getInstance();
         auto& conn = db.getConnection();
@@ -51,7 +55,7 @@ namespace Handlers::Routes::VMS{
                    )
                 );
                 stmnt->setInt(1, pct_id);
-                // stmnt->executeQuery();
+                stmnt->executeQuery();
 
                 return "{\"success\":true, \"message\":\"success\"}";
             } else{

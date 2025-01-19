@@ -18,36 +18,19 @@ struct Auth : crow::ILocalMiddleware{
 
     void before_handle(crow::request& req, crow::response& res, context& ctx) {
         Utils::Config::Env_Struct& env = Utils::Config::Env_Struct::getInstance();
-        auto cookies = req.get_header_value("Cookie");
-
-        static std::string cookie_name = env.auth_cookieName;
-        
-        std::string auth_cookie;
+        auto token = req.get_header_value("auth-token");
 
         // Check for the cookie
-        if (cookies.find(cookie_name.c_str()) == std::string::npos) {
-            Debug::Log("Request: " + crow::method_name(req.method) + " " + req.url + " (" + req.remote_ip_address + ") : Unable to find the auth", "HTTP-AUTH");
+        if (token.length() < 1) {
+            Debug::Log("Request: " + crow::method_name(req.method) + " " + req.url + " (" + req.remote_ip_address + ") : No auth cookie", "HTTP-AUTH");
             res.code = 403;
             res.write("{\"success\":false, \"error\":\"Unauthorized\"}");
             res.end();
             return;
         }
-
-        // Extract the cookie
-        size_t cookies_len = cookies.length();
-        int pos = cookies.find(cookie_name.c_str()) + cookie_name.length()+1; // +1 to avoid the '='
-        while(pos < cookies_len){
-            if(cookies[pos] != ';')
-                auth_cookie += cookies[pos];
-            else
-                break;
-            
-            pos++;
-        }
-
         // Call the auth provider
         try{
-            ctx.user = env.get_auth_provider()->checkAuth(auth_cookie);
+            ctx.user = env.get_auth_provider()->checkAuth(token);
         }
         catch(std::exception& ex){
             // Strip the quotes so it wont break the json

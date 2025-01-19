@@ -91,7 +91,6 @@ void WebServer::register_routes(){
     cors.global()
         .methods("OPTIONS"_method, "POST"_method, "GET"_method, "PUT"_method, "DELETE"_method, "OPTIONS"_method)
         .headers("*")
-        .allow_credentials()
         .origin(Env_Struct::getInstance().auth_corsFrontend)
         .max_age(3600);
 }
