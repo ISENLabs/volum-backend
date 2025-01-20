@@ -86,8 +86,8 @@ namespace Handlers::Routes::VMS{
         auto *res = stmnt->executeQuery();
 
         if(res->next()){
-            if(res->getInt(1) > 0){
-                return "{\"success\":\"true\", \"error\":\"You already have a VM.\"}";
+            if(res->getInt(1) > 0 && !ctx.user.is_admin){
+                return "{\"success\":\"false\", \"error\":\"You already have a VM.\"}";
             }
         }
 
