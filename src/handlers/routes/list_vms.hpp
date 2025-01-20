@@ -19,7 +19,7 @@ namespace Handlers::Routes::VMS{
         auto& db = Database::getInstance();
         auto& conn = db.getConnection();
         std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
-                  ctx.user.is_admin ? "SELECT * FROM volum_vms" : "SELECT * FROM volum_vms WHERE user_id = ?"
+                  ctx.user.is_admin ? "SELECT * FROM volum_vms ORDER BY ctid DESC" : "SELECT * FROM volum_vms WHERE user_id = ? ORDER BY ctid DESC"
                )
             );
         if(!ctx.user.is_admin)
