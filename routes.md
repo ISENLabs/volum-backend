@@ -33,6 +33,7 @@ In this case, you'll always get an error description.
     "lastname":"<their_lastname>",
     "email":"<their_email>",
     "id":0,
+    "is_admin": false
 }
 ```
 **Note**: If success is false, it's most likely the user isn't connected. Send them to the connection provider.
