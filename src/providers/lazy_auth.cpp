@@ -89,8 +89,8 @@ User LazyAuth::checkAuth(std::string token){
         throw std::runtime_error("Error while authenticatin you: banned");
     }
 
-    // Only authorize Caen campus, for the moment.
-    if(info.HasMember("class_name") && info["class_name"].IsString()){
+    // Only authorize Caen campus, for the moment. (and admins obviously)
+    if(!is_admin && (info.HasMember("class_name") && info["class_name"].IsString())){
         std::string classname(info["class_name"].GetString());
 
         // look for the last " "
