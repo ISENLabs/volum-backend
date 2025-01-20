@@ -90,7 +90,7 @@ User LazyAuth::checkAuth(std::string token){
     }
 
     // Only authorize Caen campus, for the moment. (and admins obviously)
-    if(!is_admin && (info.HasMember("class_name") && info["class_name"].IsString())){
+    if(!is_admin && info.HasMember("class_name") && info["class_name"].IsString()){
         std::string classname(info["class_name"].GetString());
 
         // look for the last " "
@@ -106,7 +106,7 @@ User LazyAuth::checkAuth(std::string token){
             throw std::runtime_error("Error: Volum is only available for Caen campus right now.");
         }
     }
-    else{
+    else if(!is_admin){
         Debug::Log("Error while reading json: no $.info.class_name ", "LA-CA");
         throw std::runtime_error("Error while authenticatin you");
     }
