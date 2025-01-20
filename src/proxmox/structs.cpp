@@ -31,8 +31,13 @@ std::string Converters::lxc_to_json(Proxmox_LXC lxc){
     }
 
     if(lxc.password != ""){
-        json += ",\"password\":\""+ lxc.password +"\"";
+        json += ",\"password\":\""+ lxc.password +"\",";
     }
+
+    if(lxc.owner_id > 0){
+        json += ",\"owner_id\":\""+ std::to_string(lxc.owner_id) +"\"";
+    }
+
     json += "}";
     return json;
 }

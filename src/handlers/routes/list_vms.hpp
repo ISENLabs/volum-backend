@@ -29,10 +29,12 @@ namespace Handlers::Routes::VMS{
         std::set<uint> vm_ids;
         std::map<uint, std::string> vm_ips; // cache
         std::map<uint, std::string> vm_subdomains; // cache
+        std::map<uint, uint> vm_owners; // cache
         while(res->next()){
             vm_ids.insert(res->getInt(2)); // ctid
             vm_ips.insert({(uint)res->getInt(2), std::string(res->getString(3))});
             vm_subdomains.insert({(uint)res->getInt(2), std::string(res->getString(5))});
+            vm_owners.insert({(uint)res->getInt(2), res->getUInt(4)});
         }
 
         try{
