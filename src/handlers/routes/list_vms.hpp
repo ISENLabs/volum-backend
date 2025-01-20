@@ -61,6 +61,7 @@ namespace Handlers::Routes::VMS{
                 else{
                     it->ip_address = vm_ips[it->vm_id];
                     it->subdomain = vm_subdomains[it->vm_id];
+                    it->owner_id = vm_owners[it->vm_id];
                     it++;
                 }
             }
