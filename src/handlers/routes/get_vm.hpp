@@ -36,7 +36,8 @@ namespace Handlers::Routes::VMS{
             if(res->next()){
                 uint _pct_id = res->getInt(2);
                 Proxmox_LXC lxc = Proxmox::Methods::get_lxc(_pct_id);
-                // Add IP + subdomain
+                // Add IP + subdomain + owner id 
+                lxc.owner_id = res->getUInt(4);
                 lxc.ip_address = res->getString(3);
                 lxc.subdomain = res->getString(5);
                 return "{\"success\":true, \"message\":\"success\", \"data\":["+ Converters::lxc_to_json(lxc) +"]}";

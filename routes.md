@@ -59,7 +59,8 @@ In this case, you'll always get an error description.
         "netin": "100000000",
         "netout": "100000000",
         "ip_address": "10.0.1.5",
-        "subdomain": "test"
+        "subdomain": "test",
+        "owner_id": 1
     }
 ]
 ```
@@ -88,7 +89,8 @@ In this case, you'll always get an error description.
         "netin": "100000000",
         "netout": "100000000",
         "ip_address": "10.0.1.5",
-        "subdomain": "test"
+        "subdomain": "test",
+        "owner_id": 1
     }
 ]
 ```
@@ -119,7 +121,8 @@ In this case, you'll always get an error description.
         "netout": "100000000",
         "ip_address": "10.0.1.5",
         "subdomain": "supercool",
-        "password":"auto-generated"
+        "password":"auto-generated",
+        "owner_id": 1
     }
 ]
 ```
