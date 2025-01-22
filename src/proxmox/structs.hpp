@@ -31,6 +31,10 @@ struct Proxmox_LXC { // LinuX Containers
     std::string subdomain = "";
     std::string password = ""; // empty by default!
     uint owner_id = 0;
+
+    std::string owner_name = "";
+    std::string owner_email = "";
+    std::string owner_class = "";
 };
 typedef std::vector<Proxmox_LXC> Proxmox_LXCS;
 

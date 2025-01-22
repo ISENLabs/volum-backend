@@ -19,9 +19,18 @@ namespace Handlers::Routes::VMS{
         auto& db = Database::getInstance();
         auto& conn = db.getConnection();
         std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
-                  ctx.user.is_admin ? "SELECT * FROM volum_vms ORDER BY ctid DESC" : "SELECT * FROM volum_vms WHERE user_id = ? ORDER BY ctid DESC"
-               )
-            );
+            ctx.user.is_admin ? 
+            "SELECT v.*, u.name as owner_name, u.email as owner_email, u.class_name as owner_class "
+            "FROM volum_vms v "
+            "JOIN volum_users u ON v.user_id = u.id "
+            "ORDER BY v.ctid DESC" 
+            : 
+            "SELECT v.*, u.name as owner_name, u.email as owner_email, u.class_name as owner_class "
+            "FROM volum_vms v "
+            "JOIN volum_users u ON v.user_id = u.id "
+            "WHERE v.user_id = ? "
+            "ORDER BY v.ctid DESC"
+        ));
         if(!ctx.user.is_admin)
             stmnt->setInt(1, ctx.user.userId);
         auto *res = stmnt->executeQuery();
@@ -30,11 +39,19 @@ namespace Handlers::Routes::VMS{
         std::map<uint, std::string> vm_ips; // cache
         std::map<uint, std::string> vm_subdomains; // cache
         std::map<uint, uint> vm_owners; // cache
+        std::map<uint, std::string> owner_names; // cache
+        std::map<uint, std::string> owner_emails; // cache
+        std::map<uint, std::string> owner_classes; // cache
+
         while(res->next()){
-            vm_ids.insert(res->getInt(2)); // ctid
-            vm_ips.insert({(uint)res->getInt(2), std::string(res->getString(3))});
-            vm_subdomains.insert({(uint)res->getInt(2), std::string(res->getString(5))});
-            vm_owners.insert({(uint)res->getInt(2), res->getUInt(4)});
+            uint ctid = res->getInt("ctid");
+            vm_ids.insert(ctid);
+            vm_ips.insert({ctid, std::string(res->getString("internal_ip"))});
+            vm_subdomains.insert({ctid, std::string(res->getString("subdomain"))});
+            vm_owners.insert({ctid, res->getUInt("user_id")});
+            owner_names.insert({ctid, std::string(res->getString("owner_name"))});
+            owner_emails.insert({ctid, std::string(res->getString("owner_email"))});
+            owner_classes.insert({ctid, std::string(res->getString("owner_class"))});
         }
 
         try{
@@ -48,6 +65,10 @@ namespace Handlers::Routes::VMS{
                 Proxmox_LXC lxc = Proxmox::Methods::get_lxc(*vm_ids.begin());
                 lxc.ip_address = vm_ips[lxc.vm_id];
                 lxc.subdomain = vm_subdomains[lxc.vm_id];
+                lxc.owner_id = vm_owners[lxc.vm_id];
+                lxc.owner_name = owner_names[lxc.vm_id];
+                lxc.owner_email = owner_emails[lxc.vm_id];
+                lxc.owner_class = owner_classes[lxc.vm_id];
                 return "{\"success\":true, \"message\":\"success\", \"data\":["+ Converters::lxc_to_json(lxc) +"]}";
             }
 
@@ -62,6 +83,9 @@ namespace Handlers::Routes::VMS{
                     it->ip_address = vm_ips[it->vm_id];
                     it->subdomain = vm_subdomains[it->vm_id];
                     it->owner_id = vm_owners[it->vm_id];
+                    it->owner_name = owner_names[it->vm_id];
+                    it->owner_email = owner_emails[it->vm_id];
+                    it->owner_class = owner_classes[it->vm_id];
                     it++;
                 }
             }

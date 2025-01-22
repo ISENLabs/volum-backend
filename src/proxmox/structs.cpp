@@ -38,6 +38,18 @@ std::string Converters::lxc_to_json(Proxmox_LXC lxc){
         json += ",\"owner_id\":\""+ std::to_string(lxc.owner_id) +"\"";
     }
 
+    if(lxc.owner_name != ""){
+        json += ",\"owner_name\":\""+ lxc.owner_name +"\"";
+    }
+
+    if(lxc.owner_email != ""){
+        json += ",\"owner_email\":\""+ lxc.owner_email +"\"";
+    }
+
+    if(lxc.owner_class != ""){
+        json += ",\"owner_class\":\""+ lxc.owner_class +"\"";
+    }
+
     json += "}";
     return json;
 }

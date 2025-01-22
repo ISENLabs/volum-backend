@@ -48,20 +48,28 @@ User LazyAuth::checkAuth(std::string token){
     // Extract user infos
     User user;
 
-    if(info.HasMember("firstname") && info["firstname"].IsString()){
-        user.firstname = std::string(info["firstname"].GetString());
-    }
-    else{
-        Debug::Log("Error while reading json: no $.info.firstname found", "LA-CA");
-        throw new std::runtime_error("Error while authenticating you");
-    }
+    // if(info.HasMember("firstname") && info["firstname"].IsString()){
+    //     user.firstname = std::string(info["firstname"].GetString());
+    // }
+    // else{
+    //     Debug::Log("Error while reading json: no $.info.firstname found", "LA-CA");
+    //     throw new std::runtime_error("Error while authenticating you");
+    // }
 
-    if(info.HasMember("lastname") && info["lastname"].IsString()){
-        user.lastname = std::string(info["lastname"].GetString());
+    // if(info.HasMember("lastname") && info["lastname"].IsString()){
+    //     user.lastname = std::string(info["lastname"].GetString());
+    // }
+    // else{
+    //     Debug::Log("Error while reading json: no $.info.lastname found", "LA-CA");
+    //     throw new std::runtime_error("Error while authenticating you");
+    // }
+
+    if(info.HasMember("name") && info["name"].IsString()){
+        user.name = std::string(info["name"].GetString());
     }
     else{
-        Debug::Log("Error while reading json: no $.info.lastname found", "LA-CA");
-        throw new std::runtime_error("Error while authenticating you");
+        Debug::Log("Error while reading json: no $.info.name found", "LA-CA");
+        throw std::runtime_error("Error while authenticating you");
     }
 
     if(info.HasMember("email") && info["email"].IsString()){
@@ -77,6 +85,14 @@ User LazyAuth::checkAuth(std::string token){
     }
     else{
         Debug::Log("Error while reading json: no $.info.user_id found", "LA-CA");
+        throw new std::runtime_error("Error while authenticating you");
+    }
+
+    if(info.HasMember("class_name") && info["class_name"].IsString()){
+        user.class_name = std::string(info["class_name"].GetString());
+    }
+    else{
+        Debug::Log("Error while reading json: no $.info.class_name found", "LA-CA");
         throw new std::runtime_error("Error while authenticating you");
     }
 

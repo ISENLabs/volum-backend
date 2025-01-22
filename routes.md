@@ -29,9 +29,9 @@ In this case, you'll always get an error description.
 **Response data**: (Contained in $.data)  
 ```json
 {
-    "firstname":"<their_firstname>",
-    "lastname":"<their_lastname>",
+    "name":"<their_name>",
     "email":"<their_email>",
+    "class_name":"<their_class>",
     "id":0,
     "is_admin": false
 }
