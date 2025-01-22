@@ -144,6 +144,31 @@ namespace Handlers::Routes::VMS{
             lxc.subdomain = subdomain;
             lxc.owner_id = ctx.user.userId;
 
+
+
+            // check if the user is not in db
+            std::shared_ptr<sql::PreparedStatement> stmnt3(conn->prepareStatement(
+                  "SELECT * FROM volum_users WHERE id = ?;"
+               )
+            );
+
+            stmnt3->setInt(1, ctx.user.userId);
+            auto *res3 = stmnt3->executeQuery();
+
+            if(!res3->next()){
+                // first add the user to db
+                std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
+                      "INSERT INTO volum_users(id, name, email, class_name) VALUES(?, ?, ?, ?);"
+                   )
+                );
+
+                stmnt->setInt(1, ctx.user.userId);
+                stmnt->setString(2, ctx.user.name);
+                stmnt->setString(3, ctx.user.email);
+                stmnt->setString(4, ctx.user.class_name);
+                stmnt->executeQuery();
+            }
+
             // Add to db
             std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
                   "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES(?, ?, ?, ?);"
