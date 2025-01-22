@@ -18,10 +18,10 @@ struct User {
             // "\"firstname\":\"" + firstname + "\","
             // "\"lastname\":\"" + lastname + "\","
             "\"name\":\"" + name + "\","
-            "\"email\":\"" + email + "\"," 
+            "\"email\":\"" + email + "\","
             "\"id\":" + std::to_string(userId) + ","
-            "\"is_admin\":" + (is_admin ? "true":"false") + "\","
-            "\"class_name\":" + class_name + "\"" +
+            "\"is_admin\":" + (is_admin ? "true":"false") + ","
+            "\"class_name\":\"" + class_name + "\"" +
         "}";
     }
 };
