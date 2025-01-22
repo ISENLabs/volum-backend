@@ -21,7 +21,7 @@ struct User {
             "\"email\":\"" + email + "\"," 
             "\"id\":" + std::to_string(userId) + ","
             "\"is_admin\":" + (is_admin ? "true":"false") + "\","
-            "\"class_name\":" + class_name + "\""
+            "\"class_name\":" + class_name + "\"" +
         "}";
     }
 };
