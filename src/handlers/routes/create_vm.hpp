@@ -118,6 +118,7 @@ namespace Handlers::Routes::VMS{
                     if(bytes[2] == 255) 
                         throw std::runtime_error("All ip taken");
                     bytes[2]++;
+                    bytes[3] = 0;
                 } 
                 else 
                     bytes[3]++;
@@ -144,11 +145,9 @@ namespace Handlers::Routes::VMS{
             lxc.subdomain = subdomain;
             lxc.owner_id = ctx.user.userId;
 
-
-
             // check if the user is not in db
             std::shared_ptr<sql::PreparedStatement> stmnt3(conn->prepareStatement(
-                  "SELECT * FROM volum_users WHERE id = ?;"
+              "SELECT * FROM volum_users WHERE id = ?;"
                )
             );
 
@@ -157,29 +156,29 @@ namespace Handlers::Routes::VMS{
 
             if(!res3->next()){
                 // first add the user to db
-                std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
-                      "INSERT INTO volum_users(id, name, email, class_name) VALUES(?, ?, ?, ?);"
-                   )
+                std::shared_ptr<sql::PreparedStatement> stmnt4(conn->prepareStatement(
+                    "INSERT INTO volum_users(id, name, email, class_name) VALUES(?, ?, ?, ?);"
+                )
                 );
 
-                stmnt->setInt(1, ctx.user.userId);
-                stmnt->setString(2, ctx.user.name);
-                stmnt->setString(3, ctx.user.email);
-                stmnt->setString(4, ctx.user.class_name);
-                stmnt->executeQuery();
+                stmnt4->setInt(1, ctx.user.userId);
+                stmnt4->setString(2, ctx.user.name);
+                stmnt4->setString(3, ctx.user.email);
+                stmnt4->setString(4, ctx.user.class_name);
+                stmnt4->executeQuery();
             }
 
             // Add to db
-            std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
-                  "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES(?, ?, ?, ?);"
+            std::shared_ptr<sql::PreparedStatement> stmnt5(conn->prepareStatement(
+              "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES(?, ?, ?, ?);"
                )
             );
 
-            stmnt->setInt(1, pct_id);
-            stmnt->setString(2, internal_ip);
-            stmnt->setInt(3, ctx.user.userId);
-            stmnt->setString(4, subdomain);
-            stmnt->executeQuery();
+            stmnt5->setInt(1, pct_id);
+            stmnt5->setString(2, internal_ip);
+            stmnt5->setInt(3, ctx.user.userId);
+            stmnt5->setString(4, subdomain);
+            stmnt5->executeQuery();
 
             return "{\"success\":true, \"message\":\"success\", \"data\":["+ Converters::lxc_to_json(lxc) +"]}";
         }
