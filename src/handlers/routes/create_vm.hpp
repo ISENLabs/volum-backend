@@ -7,10 +7,12 @@
 #include <crow.h>
 #include <iostream>
 #include <sstream>
+#define MAX_VMS 2;
 
 using Services::Database;
 using namespace Proxmox::Structs;
 using namespace Utils::Config;
+
 
 namespace Handlers::Routes::VMS{
     bool isSubdomainValid(std::string subdomain){
@@ -75,7 +77,7 @@ namespace Handlers::Routes::VMS{
         if(!isSubdomainValid(subdomain)) 
             return "{\"success\":false, \"error\":\"invalid subdomain\"}";
 
-        // Limit to 1 vm/user (except. admins)
+        // Limit to MAX_VMS vm/user (except. admins)
         auto& db = Database::getInstance();
         auto& conn = db.getConnection();
         std::shared_ptr<sql::PreparedStatement> stmnt(conn->prepareStatement(
@@ -86,8 +88,8 @@ namespace Handlers::Routes::VMS{
         auto *res = stmnt->executeQuery();
 
         if(res->next()){
-            if(res->getInt(1) > 0 && !ctx.user.is_admin){
-                return "{\"success\":\"false\", \"error\":\"You already have a VM.\"}";
+            if(res->getInt(1) > MAX_VMS-1 && !ctx.user.is_admin){
+                return "{\"success\":\"false\", \"error\":\"You reached VMs limit.\"}";
             }
         }
 
