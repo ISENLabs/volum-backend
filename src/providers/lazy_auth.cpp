@@ -97,7 +97,7 @@ User LazyAuth::checkAuth(std::string token){
     }
 
     // Check if the user is admin
-    bool is_admin = info.HasMember("is_admin") && info["is_admin"].IsUint() && info["is_admin"].GetUint() == 1;
+    bool is_admin = info.HasMember("is_admin") && info["is_admin"].IsBool() && info["is_admin"].GetBool();
     user.is_admin = is_admin;
 
     if(!is_admin && info.HasMember("is_banned") && info["is_banned"].IsUint() && info["is_banned"].GetUint() ==1){
