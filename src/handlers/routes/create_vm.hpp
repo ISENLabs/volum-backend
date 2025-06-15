@@ -7,7 +7,7 @@
 #include <crow.h>
 #include <iostream>
 #include <sstream>
-#define MAX_VMS 2;
+#define MAX_VMS 2
 
 using Services::Database;
 using namespace Proxmox::Structs;
@@ -87,10 +87,13 @@ namespace Handlers::Routes::VMS{
         stmnt->setInt(1, ctx.user.userId);
         auto *res = stmnt->executeQuery();
 
+        int vm_count = 0;
         if(res->next()){
-            if(res->getInt(1) > MAX_VMS-1 && !ctx.user.is_admin){
-                return "{\"success\":\"false\", \"error\":\"You reached VMs limit.\"}";
-            }
+            vm_count = res->getInt(1);
+        }
+
+        if(vm_count >= MAX_VMS && !ctx.user.is_admin){
+            return "{\"success\":false, \"error\":\"You reached VMs limit.\"}";
         }
 
         std::shared_ptr<sql::PreparedStatement> stmnt2(conn->prepareStatement(
