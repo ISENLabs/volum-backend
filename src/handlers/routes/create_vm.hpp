@@ -7,7 +7,7 @@
 #include <crow.h>
 #include <iostream>
 #include <sstream>
-#define MAX_VMS 2;
+#define MAX_VMS 2
 
 using Services::Database;
 using namespace Proxmox::Structs;
