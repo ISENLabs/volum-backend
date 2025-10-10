@@ -106,6 +106,7 @@ User LazyAuth::checkAuth(std::string token){
     }
 
     // Only authorize Caen campus, for the moment. (and admins obviously)
+    /*
     if(!is_admin && info.HasMember("class_name") && info["class_name"].IsString()){
         std::string classname(info["class_name"].GetString());
 
@@ -126,6 +127,7 @@ User LazyAuth::checkAuth(std::string token){
         Debug::Log("Error while reading json: no $.info.class_name ", "LA-CA");
         throw std::runtime_error("Error while authenticatin you");
     }
+    */
 
     // Store user in cache
     _cache.store_element(token, user);
