@@ -175,7 +175,7 @@ namespace Handlers::Routes::VMS{
 
             // Add to db
             std::shared_ptr<sql::PreparedStatement> stmnt5(conn->prepareStatement(
-              "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES(?, ?, ?, ?);"
+              "INSERT INTO volum_vms(ctid, internal_ip, user_id, subdomain) VALUES(?, ?, ?, LOWER(?));"
                )
             );
 
