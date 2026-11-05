@@ -32,43 +32,22 @@ User LazyAuth::checkAuth(std::string token){
         throw std::runtime_error("Error while authenticating you");
     }
 
-    // First, check if the user is marked as admin
-    if(!doc.HasMember("status") || (doc["status"].IsUint() && doc["status"].GetUint() != 200)){
-        Debug::Log("Error in reading json: $.status step", "LA-CA");
+    // Lazy v2 format: GET /user/info -> {"infos": {...}, "notif": [...]}
+    if(!doc.IsObject() || !doc.HasMember("infos") || !doc["infos"].IsObject()){
+        Debug::Log("Error while reading json: $.infos does not exists", "LA-CA");
         throw std::runtime_error("Error while authenticating you");
     }
 
-    if(!doc.HasMember("info")){
-        Debug::Log("Error while reading json: $.info does not exists", "LA-CA");
-        throw std::runtime_error("Error while authenticating you");
-    }
-    
-    Value& info = doc["info"];
+    Value& info = doc["infos"];
 
     // Extract user infos
     User user;
-
-    // if(info.HasMember("firstname") && info["firstname"].IsString()){
-    //     user.firstname = std::string(info["firstname"].GetString());
-    // }
-    // else{
-    //     Debug::Log("Error while reading json: no $.info.firstname found", "LA-CA");
-    //     throw new std::runtime_error("Error while authenticating you");
-    // }
-
-    // if(info.HasMember("lastname") && info["lastname"].IsString()){
-    //     user.lastname = std::string(info["lastname"].GetString());
-    // }
-    // else{
-    //     Debug::Log("Error while reading json: no $.info.lastname found", "LA-CA");
-    //     throw new std::runtime_error("Error while authenticating you");
-    // }
 
     if(info.HasMember("name") && info["name"].IsString()){
         user.name = std::string(info["name"].GetString());
     }
     else{
-        Debug::Log("Error while reading json: no $.info.name found", "LA-CA");
+        Debug::Log("Error while reading json: no $.infos.name found", "LA-CA");
         throw std::runtime_error("Error while authenticating you");
     }
 
@@ -76,58 +55,40 @@ User LazyAuth::checkAuth(std::string token){
         user.email = std::string(info["email"].GetString());
     }
     else{
-        Debug::Log("Error while reading json: no $.info.email found", "LA-CA");
-        throw new std::runtime_error("Error while authenticating you");
+        Debug::Log("Error while reading json: no $.infos.email found", "LA-CA");
+        throw std::runtime_error("Error while authenticating you");
     }
 
-    if(info.HasMember("user_id") && info["user_id"].IsUint()){
-        user.userId = info["user_id"].GetUint();
+    if(info.HasMember("id") && info["id"].IsUint()){
+        user.userId = info["id"].GetUint();
     }
     else{
-        Debug::Log("Error while reading json: no $.info.user_id found", "LA-CA");
-        throw new std::runtime_error("Error while authenticating you");
+        Debug::Log("Error while reading json: no $.infos.id found", "LA-CA");
+        throw std::runtime_error("Error while authenticating you");
     }
 
-    if(info.HasMember("class_name") && info["class_name"].IsString()){
-        user.class_name = std::string(info["class_name"].GetString());
+    // class_name = "<cycle> <year> <city>" (same as Lazy v1)
+    if(info.HasMember("cycle") && info["cycle"].IsString()
+        && info.HasMember("year") && info["year"].IsString()
+        && info.HasMember("city") && info["city"].IsString()){
+        user.class_name = std::string(info["cycle"].GetString()) + " "
+            + info["year"].GetString() + " "
+            + info["city"].GetString();
     }
     else{
-        Debug::Log("Error while reading json: no $.info.class_name found", "LA-CA");
-        throw new std::runtime_error("Error while authenticating you");
+        Debug::Log("Error while reading json: no $.infos.cycle/year/city found", "LA-CA");
+        throw std::runtime_error("Error while authenticating you");
     }
 
     // Check if the user is admin
     bool is_admin = info.HasMember("is_admin") && info["is_admin"].IsBool() && info["is_admin"].GetBool();
     user.is_admin = is_admin;
 
-    if(!is_admin && info.HasMember("is_banned") && info["is_banned"].IsUint() && info["is_banned"].GetUint() ==1){
+    bool is_banned = info.HasMember("is_banned") && info["is_banned"].IsBool() && info["is_banned"].GetBool();
+    if(!is_admin && is_banned){
         Debug::Log("Error: user is banned", "LA-CA");
         throw std::runtime_error("Error while authenticatin you: banned");
     }
-
-    // Only authorize Caen campus, for the moment. (and admins obviously)
-    /*
-    if(!is_admin && info.HasMember("class_name") && info["class_name"].IsString()){
-        std::string classname(info["class_name"].GetString());
-
-        // look for the last " "
-        // CIR 3 CAEN
-        int last_space = 0;
-        int _len = classname.length();
-        for(int i = 0; i < _len; i++)
-            if(classname[i] == ' ')
-                last_space = i;
-
-        if(classname.substr(_len - (_len - 1  - last_space)) != "Caen"){
-            Debug::Log("Error: class isnt caen: '" + classname + "' -> '" + classname.substr(_len - (_len - 1 - last_space)) + "'", "LA-CA");
-            throw std::runtime_error("Error: Volum is only available for Caen campus right now.");
-        }
-    }
-    else if(!is_admin){
-        Debug::Log("Error while reading json: no $.info.class_name ", "LA-CA");
-        throw std::runtime_error("Error while authenticatin you");
-    }
-    */
 
     // Store user in cache
     _cache.store_element(token, user);

@@ -27,8 +27,8 @@
         "database": "my_database"
     },
     "auth":{
-        "lazy_hostname": "https://lazy-api.mysite.fr",
-        "lazy_route": "/api/user",
+        "lazy_hostname": "https://lazy.mysite.fr",
+        "lazy_route": "/api/user/info",
         "cors_frontend": "http://localhost:5173"
     },
     "webserver":{
